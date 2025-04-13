@@ -53,7 +53,10 @@ export class HomeComponent implements OnInit {
           }
         });
       },
-      error: (error) => console.error('Error al cargar publicaciones:', error)
+      error: (error) => {
+        console.error('Error al cargar publicaciones:', error);
+        this.publicaciones = []; // ← importante para activar el mensaje en HTML
+      }
     });
   }
 

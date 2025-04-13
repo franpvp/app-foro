@@ -156,13 +156,22 @@ export class NavbarComponent implements OnInit {
   }
 
   logout(): void {
-    const username = this.auth.getUsername() || '';
-    this.auth.logout(username).subscribe({
-      next: () => {
-        this.router.navigate(['/login']);
-      },
-      error: (error) => console.error('Error logging out:', error)
-    });
+    const username = this.auth.getUsername();
+  
+    if (username) {
+      this.auth.logout(username).subscribe({
+        next: (mensaje) => {
+          console.log(mensaje); // <- si quieres mostrar mensaje "Sesión cerrada"
+          this.router.navigate(['/login']);
+        },
+        error: (err) => {
+          console.error('Error al cerrar sesión:', err);
+          // igual limpiamos localStorage en caso de error
+          this.auth.logout(username).subscribe(); // o directamente localStorage.clear()
+          this.router.navigate(['/login']);
+        }
+      });
+    }
   }
   getUsername(): string | null {
     return localStorage.getItem('username');

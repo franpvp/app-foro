@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { UsuarioService } from '../../services/usuario.service';
 import { UsuarioDTO } from '../../models/usuario.model';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-perfil',
@@ -150,15 +151,28 @@ export class PerfilComponent implements OnInit {
 
   isEditing: boolean = false;
 
-  constructor(private usuarioService: UsuarioService) {}
+  constructor(
+    private usuarioService: UsuarioService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    const userId = 1;
-    this.usuarioService.obtenerUsuarioPorId(userId).subscribe({
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+
+    if (!token || !userId) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.usuarioService.obtenerUsuarioPorId(Number(userId)).subscribe({
       next: (data: UsuarioDTO) => {
         this.usuario = data;
       },
-      error: (error) => console.error('Error loading user profile:', error)
+      error: (error) => {
+        console.error('Error loading user profile:', error);
+        this.router.navigate(['/login']);
+      }
     });
   }
 
@@ -166,7 +180,6 @@ export class PerfilComponent implements OnInit {
     if (!this.isEditing) {
       this.isEditing = true;
     } else {
-      // Guardar cambios y salir del modo edición
       this.usuarioService.modificarUsuario(this.usuario).subscribe({
         next: (updatedUser) => {
           this.usuario = updatedUser;

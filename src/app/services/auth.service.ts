@@ -24,8 +24,8 @@ export class AuthService {
     );
   }
 
-  logout(username: string): Observable<void> {
-    return this.http.post<void>(`${this.baseUrl}/logout?username=${username}`, {})
+  logout(username: string): Observable<string> {
+    return this.http.post<string>(`${this.baseUrl}/logout?username=${username}`, {})
       .pipe(
         tap(() => {
           localStorage.removeItem('token');
@@ -40,7 +40,7 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
+    return !!localStorage.getItem('username');
   }
 
   getUsername(): string | null {
