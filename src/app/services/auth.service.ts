@@ -11,15 +11,18 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-login(username: string, password: string): Observable<string> {
-  return this.http.post(`${this.baseUrl}/login`, { username, password }, { responseType: 'text' })
-    .pipe(
-      tap(token => {
-        localStorage.setItem('token', token);
-        localStorage.setItem('username', username);
+  login(username: string, password: string): Observable<any> {
+    return this.http.post<{ token: string, username: string, userId: number }>(
+      `${this.baseUrl}/login`,
+      { username, password }
+    ).pipe(
+      tap(response => {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('username', response.username);
+        localStorage.setItem('userId', response.userId.toString());
       })
     );
-}
+  }
 
   logout(username: string): Observable<void> {
     return this.http.post<void>(`${this.baseUrl}/logout?username=${username}`, {})
@@ -27,6 +30,7 @@ login(username: string, password: string): Observable<string> {
         tap(() => {
           localStorage.removeItem('token');
           localStorage.removeItem('username');
+          localStorage.removeItem('userId');
         })
       );
   }

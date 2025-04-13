@@ -21,10 +21,13 @@ import { AuthService } from '../../services/auth.service';
         </div>
         <ul class="nav-links" [class.active]="isMenuOpen">
           <li><a routerLink="/home">Inicio</a></li>
+
           <ng-container *ngIf="auth.isLoggedIn(); else notLogged">
+            <li class="user-greeting">Hola, {{ auth.getUsername() }} 👋</li>
             <li><a routerLink="/perfil">Perfil</a></li>
             <li><a (click)="logout()" class="logout-link">Cerrar sesión</a></li>
           </ng-container>
+
           <ng-template #notLogged>
             <li><a routerLink="/login">Login</a></li>
             <li><a routerLink="/registro">Registro</a></li>
@@ -123,6 +126,20 @@ import { AuthService } from '../../services/auth.service';
         text-align: center;
       }
     }
+    .user-greeting {
+      color: #ff9800;
+      font-weight: 500;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .user-greeting {
+        font-size: 0.95rem;
+        color: #ffc107;
+      }
+    }
   `]
 })
 export class NavbarComponent implements OnInit {
@@ -146,5 +163,8 @@ export class NavbarComponent implements OnInit {
       },
       error: (error) => console.error('Error logging out:', error)
     });
+  }
+  getUsername(): string | null {
+    return localStorage.getItem('username');
   }
 }

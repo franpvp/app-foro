@@ -1,0 +1,96 @@
+<app-navbar></app-navbar>
+
+<div class="container mt-5 pt-4" style="max-width: 720px; color: #e0e0e0;">
+
+  <!-- Formulario nueva publicación (solo si está logeado) -->
+  <div *ngIf="authEstaLogeado()" class="card mb-4 post-card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">Crear nueva publicación</h5>
+      <form (ngSubmit)="crearNuevaPublicacion()">
+        <div class="mb-3">
+          <input type="text" class="form-control" placeholder="Título"
+                 [(ngModel)]="nuevaPublicacion.titulo" name="titulo" required>
+        </div>
+        <div class="mb-3">
+          <textarea class="form-control" placeholder="¿Qué estás pensando?"
+                    [(ngModel)]="nuevaPublicacion.contenido" name="contenido" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-warning w-100">Publicar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Mostrar mensaje si no hay publicaciones -->
+  <div *ngIf="publicaciones.length === 0" class="text-center mt-4">
+    <p class="text-muted">No hay publicaciones por ahora.</p>
+  </div>
+
+  <!-- Lista de publicaciones -->
+  <ng-container *ngFor="let publicacion of publicaciones">
+    <div *ngIf="publicacion.idPublicacion !== undefined" class="card post-card shadow-sm mb-4">
+      <div class="card-body">
+        <div class="d-flex align-items-center mb-3">
+          <img src="assets/avatar.png" class="rounded-circle me-3 avatar" alt="Avatar">
+          <div>
+            <h6 class="mb-0 fw-bold">Usuario {{ publicacion.idUsuario }}</h6>
+            <small class="text-muted">{{ publicacion.fechaCreacion | date:'short' }}</small>
+          </div>
+        </div>
+
+        <h5 class="card-title">{{ publicacion.titulo }}</h5>
+        <p class="card-text">{{ publicacion.contenido }}</p>
+
+        <hr>
+
+        <!-- Comentarios -->
+        <div class="comments-section mt-3">
+
+          <!-- Si está logeado: mostrar campo de comentario -->
+          <div *ngIf="authEstaLogeado(); else soloLectura">
+            <div class="mb-2">
+              <input class="form-control"
+                     placeholder="Escribe un comentario..."
+                     [(ngModel)]="nuevosComentarios[publicacion.idPublicacion!]"
+                     [name]="'comment' + publicacion.idPublicacion">
+            </div>
+            <button class="btn btn-sm btn-outline-light mb-3"
+                    (click)="agregarComentario(publicacion.idPublicacion!)">
+              Comentar
+            </button>
+          </div>
+
+          <!-- Si no está logeado: mostrar aviso visual estilo red social -->
+          <ng-template #soloLectura>
+            <div class="d-flex align-items-center gap-2 px-3 py-2 bg-secondary bg-opacity-25 rounded">
+              <i class="bi bi-info-circle-fill text-warning"></i>
+              <small class="text-light">Inicia sesión para unirte a la conversación</small>
+            </div>
+          </ng-template>
+
+          <!-- Lista de comentarios -->
+          <div *ngFor="let comentario of comentarios[publicacion.idPublicacion!]"
+               class="comment-box p-2 mt-2 d-flex justify-content-between align-items-start">
+            <div>
+              <span class="fw-bold">Usuario {{ comentario.idUsuario }}</span><br>
+              <span>{{ comentario.contenido }}</span>
+            </div>
+            <button *ngIf="authEstaLogeado() && comentario.idUsuario === userId"
+                    class="btn btn-sm btn-danger"
+                    (click)="eliminarComentario(comentario.idComentario!, publicacion.idPublicacion!)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Acciones del dueño de publicación -->
+        <div *ngIf="publicacion.idUsuario === userId" class="text-end mt-3">
+          <button class="btn btn-sm btn-danger"
+                  (click)="eliminarPublicacion(publicacion.idPublicacion!)">
+            <i class="bi bi-trash-fill me-1"></i>Eliminar publicación
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+</div>
