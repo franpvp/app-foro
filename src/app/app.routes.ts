@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
+// import { AdminGuard } from './guards/admin.guard'; // Opcional, si dispones de uno
 
 export const routes: Routes = [
   {
@@ -34,7 +35,31 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'admin',
+    loadComponent: () =>
+      import('./pages/admin/admin.component').then(m => m.AdminComponent),
+    canActivate: [AuthGuard] // Puedes agregar AdminGuard aquí si lo tienes
+  },
+  {
+    path: 'admin/editar-comentario/:id',
+    loadComponent: () =>
+      import('./pages/admin/editar-comentario.component').then(m => m.EditarComentarioComponent),
+    canActivate: [AuthGuard] // o [AuthGuard, AdminGuard] según necesidad
+  },
+  {
+    path: 'admin/editar-usuario/:id',
+    loadComponent: () =>
+      import('./pages/admin/editar-usuario.component').then(m => m.EditarUsuarioComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'admin/editar-publicacion/:id',
+    loadComponent: () =>
+      import('./pages/admin/editar-publicacion.component').then(m => m.EditarPublicacionComponent),
+    canActivate: [AuthGuard]
+  },
+  {
     path: '**',
-    redirectTo: 'home' // o redirigir a un 404 si tienes uno
+    redirectTo: 'home'
   }
 ];

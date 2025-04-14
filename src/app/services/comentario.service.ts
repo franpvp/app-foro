@@ -15,6 +15,9 @@ export class ComentarioService {
     return this.http.get<ComentarioDTO[]>(`${this.baseUrl}/comentarios/${idPublicacion}`);
   }
 
+  obtenerTodosLosComentarios(): Observable<ComentarioDTO[]> {
+    return this.http.get<ComentarioDTO[]>(`${this.baseUrl}/comentarios/todos`);
+  }
   crearComentario(comentario: ComentarioDTO): Observable<ComentarioDTO> {
     return this.http.post<ComentarioDTO>(`${this.baseUrl}/comentarios`, comentario);
   }
@@ -26,4 +29,9 @@ export class ComentarioService {
   eliminarComentario(idComentario: number, idUsuario: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/comentarios?id-comentario=${idComentario}&id-usuario=${idUsuario}`);
   }
+
+  obtenerComentarioPorId(id: number): Observable<ComentarioDTO> {
+    return this.http.get<ComentarioDTO>(`${this.baseUrl}/comentarios/comentario/${id}`);
+  }
+  
 }

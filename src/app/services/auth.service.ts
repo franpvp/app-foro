@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
+import { LoginResponseDTO } from '../models/login-response.model';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -11,17 +13,17 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  login(username: string, password: string): Observable<any> {
-    return this.http.post<{ token: string, username: string, userId: number }>(
-      `${this.baseUrl}/login`,
-      { username, password }
-    ).pipe(
-      tap(response => {
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('username', response.username);
-        localStorage.setItem('userId', response.userId.toString());
-      })
-    );
+  
+  login(username: string, password: string): Observable<LoginResponseDTO> {
+    return this.http.post<LoginResponseDTO>(`${this.baseUrl}/login`, { username, password })
+      .pipe(
+        tap(response => {
+          localStorage.setItem('token', response.token);
+          localStorage.setItem('username', response.username);
+          localStorage.setItem('userId', response.userId.toString());
+          localStorage.setItem('userRol', response.role);
+        })
+      );
   }
 
   logout(username: string): Observable<string> {
@@ -31,6 +33,7 @@ export class AuthService {
           localStorage.removeItem('token');
           localStorage.removeItem('username');
           localStorage.removeItem('userId');
+          localStorage.removeItem('userRol');
         })
       );
   }

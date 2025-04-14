@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
+import { LoginResponseDTO } from '../../models/login-response.model';
 
 @Component({
   selector: 'app-login',
@@ -124,15 +125,24 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    const card = document.querySelector('.card');
-    if (card) {
-      card.classList.add('logging-in');
-      setTimeout(() => { card.classList.remove('logging-in'); }, 500);
-    }
-
     this.authService.login(this.username, this.password).subscribe({
-      next: () => this.router.navigate(['/']),
-      error: (error) => console.error('Login failed:', error)
+      next: (response: LoginResponseDTO) => {
+        console.log(response.role);
+ 
+        // Puedes guardar el token y otra información de ser necesario
+        if (response.role === 'ADMIN') {
+          // Si es administrador, se redirige a la página de administración
+          this.router.navigate(['/admin']);
+        } else {
+          // Si es usuario común, se muestra un mensaje de error o se redirige a otra página según tu lógica
+         //alert('Acceso denegado, solo administradores pueden ingresar.');
+
+         this.router.navigate(['/home']);
+        }
+      },
+      error: (error) => {
+        console.error('Login failed:', error);
+      }
     });
   }
 
