@@ -10,6 +10,8 @@ import { ComentarioDTO } from '../../models/comentario.model';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 
+import { AuthService } from '../../services/auth.service';
+
 
 @Component({
   selector: 'app-home',
@@ -19,6 +21,7 @@ import { FooterComponent } from '../../components/footer/footer.component';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+
   publicaciones: PublicacionDTO[] = [];
   comentarios: { [key: number]: ComentarioDTO[] } = {};
   nuevosComentarios: { [key: number]: string } = {};
@@ -32,6 +35,7 @@ export class HomeComponent implements OnInit {
   };
 
   constructor(
+    public auth: AuthService,
     private publicacionService: PublicacionService,
     private comentarioService: ComentarioService
   ) {}
@@ -124,21 +128,26 @@ export class HomeComponent implements OnInit {
     });
   }
 
-
   setUserIdIfLogged(): void {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
-  
+
     if (token && userId) {
       this.userId = Number(this.obtenerUsuarioById);
     }
   }
+
   authEstaLogeado(): boolean {
     return !!localStorage.getItem('token') && !!localStorage.getItem('userId');
   }
+
   get obtenerUsuarioById(): string | null {
     return localStorage.getItem('userId');
   }
+
+  getUsername(): string | null {
+      return localStorage.getItem('username');
+    }
 
 
 }

@@ -9,16 +9,6 @@ import { RouterModule } from '@angular/router';
   template: `
     <footer class="site-footer">
       <div class="footer-content">
-        <!-- Logo / Nombre -->
-        <div class="footer-section footer-logo">
-          <strong>PublicaTodo</strong>
-        </div>
-        <!-- Enlaces Rápidos -->
-        <div class="footer-section quick-links">
-          <a routerLink="/home">Inicio</a>
-          <a routerLink="/perfil">Perfil</a>
-          <a routerLink="/contacto">Contacto</a>
-        </div>
         <!-- Redes Sociales -->
         <div class="footer-section footer-social">
           <a href="https://instagram.com" target="_blank"><i class="bi bi-instagram"></i></a>
@@ -30,7 +20,7 @@ import { RouterModule } from '@angular/router';
   `,
   styles: [`
     .site-footer {
-      margin-top: 3rem; 
+      margin-top: 3rem;
       background: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(5px);
       -webkit-backdrop-filter: blur(5px);

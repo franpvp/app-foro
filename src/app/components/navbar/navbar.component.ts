@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; 
+import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
@@ -27,13 +27,14 @@ import { AuthService } from '../../services/auth.service';
 
       <!-- Enlaces -->
       <ul class="nav-links" [class.active]="isMenuOpen">
-        <li><a routerLink="/home">Inicio</a></li>
         <ng-container *ngIf="auth.isLoggedIn(); else notLogged">
-          <li class="user-greeting">Hola, {{ auth.getUsername() }} 👋</li>
+          <li class="user-greeting">Hola, {{ auth.getUsername() }}</li>
+          <li><a routerLink="/home">Inicio</a></li>
           <li><a routerLink="/perfil">Perfil</a></li>
           <li><a (click)="logout()" class="logout-link">Cerrar sesión</a></li>
         </ng-container>
         <ng-template #notLogged>
+          <li><a routerLink="/home">Inicio</a></li>
           <li><a routerLink="/login">Login</a></li>
           <li><a routerLink="/registro">Registro</a></li>
         </ng-template>
@@ -59,6 +60,9 @@ styles: [`
     width: 100%;
     z-index: 1000;
     transition: background 0.3s ease;
+  }
+  .logout-link {
+    cursor: pointer;
   }
   .navbar-container {
     width: 100%;
@@ -188,17 +192,16 @@ export class NavbarComponent implements OnInit {
 
   logout(): void {
     const username = this.auth.getUsername();
-  
+
     if (username) {
       this.auth.logout(username).subscribe({
         next: (mensaje) => {
-          console.log(mensaje); // <- si quieres mostrar mensaje "Sesión cerrada"
+          console.log(mensaje);
           this.router.navigate(['/login']);
         },
         error: (err) => {
           console.error('Error al cerrar sesión:', err);
-          // igual limpiamos localStorage en caso de error
-          this.auth.logout(username).subscribe(); // o directamente localStorage.clear()
+          this.auth.logout(username).subscribe();
           this.router.navigate(['/login']);
         }
       });

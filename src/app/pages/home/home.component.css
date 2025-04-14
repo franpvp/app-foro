@@ -1,26 +1,45 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #121212;
+}
+
 :host {
-  display: block;
-  /* Fondo degradado + fondo opcional (comentado; activa si agregas una imagen en assets/background.jpg) */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   background: linear-gradient(145deg, #121212, #1a1a1a, #181818);
-  /* Para usar una imagen de fondo, puedes combinarla así (descomenta la línea): */
-  /* background: linear-gradient(145deg, rgba(18,18,18,0.8), rgba(26,26,26,0.8)), url('assets/background.jpg') no-repeat center center/cover; */
   background-size: cover;
   background-position: center;
-  min-height: 100vh;
-  padding: 80px 1rem 4rem;  /* 80px para el navbar en la parte superior y 4rem para separar del footer */
   font-family: 'Segoe UI', sans-serif;
   color: #e0e0e0;
 }
-@keyframes backgroundLoop {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+
 .container {
+  flex: 1;
   max-width: 720px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 80px 1rem 4rem; /* espacio para navbar y footer */
 }
+
+::placeholder {
+  color: #ffffff !important;
+  opacity: 0.8; /* opcional: para que no sea tan fuerte */
+}
+
+/* Compatibilidad con navegadores antiguos */
+input::placeholder,
+textarea::placeholder {
+  color: #ffffff !important;
+  opacity: 0.8;
+}
+
+.card-text {
+  color: #ffffff;
+  line-height: 1.5;
+}
+
 /* Tarjeta de publicación con efecto glass */
 .post-card {
   background: rgba(255, 255, 255, 0.08);
@@ -33,12 +52,19 @@
   margin-bottom: 1rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
 .post-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
 }
+
 .card-body { padding: 0; }
-.post-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
 .avatar {
   width: 48px;
   height: 48px;
@@ -46,9 +72,12 @@
   border: 2px solid #ff9800;
   transition: transform 0.3s ease;
 }
-.avatar:hover { transform: scale(1.05) rotate(3deg); }
+.avatar:hover {
+  transform: scale(1.05) rotate(3deg);
+}
 .card-title { color: #ffca28; margin: 0.5rem 0; }
 .card-text { line-height: 1.5; }
+
 .form-control {
   background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(4px);
@@ -59,7 +88,13 @@
   color: #fff;
   transition: border-color 0.3s ease;
 }
-.form-control:focus { border-color: #bb33ff; box-shadow: 0 0 8px rgba(187,51,255,0.5); outline: none; }
+
+.form-control:focus {
+  border-color: #bb33ff;
+  box-shadow: 0 0 8px rgba(187, 51, 255, 0.5);
+  outline: none;
+}
+
 .btn {
   border-radius: 8px;
   padding: 0.5rem 1rem;
@@ -71,18 +106,26 @@
   background: linear-gradient(45deg, #833ab4, #ee2a7b);
   color: #fff;
 }
-.btn-warning:hover { box-shadow: 0 0 10px rgba(238,42,123,0.6); }
+.btn-warning:hover {
+  box-shadow: 0 0 10px rgba(238, 42, 123, 0.6);
+}
 .btn-outline-light {
   background: transparent;
   border: 1px solid #ffca28;
   color: #ffca28;
 }
-.btn-outline-light:hover { background: #ffca28; color: #1e1e1e; }
+.btn-outline-light:hover {
+  background: #ffca28;
+  color: #1e1e1e;
+}
 .btn-danger {
   background: linear-gradient(45deg, #ff4b4b, #ffbb42);
   color: #fff;
 }
-.btn-danger:hover { box-shadow: 0 0 10px rgba(255,75,75,0.6); }
+.btn-danger:hover {
+  box-shadow: 0 0 10px rgba(255, 75, 75, 0.6);
+}
+
 .info-login {
   display: flex;
   align-items: center;
@@ -91,6 +134,20 @@
   padding: 0.5rem;
   border-radius: 8px;
 }
-.info-login i { font-size: 1.3rem; color: #ffca28; }
-.no-posts { text-align: center; margin-top: 2rem; }
-.no-posts i { font-size: 2rem; color: #ffca28; }
+
+.info-login small {
+  color: #fff;
+}
+
+.info-login i {
+  font-size: 1.3rem;
+  color: #ffca28;
+}
+.no-posts {
+  text-align: center;
+  margin-top: 2rem;
+}
+.no-posts i {
+  font-size: 2rem;
+  color: #ffca28;
+}

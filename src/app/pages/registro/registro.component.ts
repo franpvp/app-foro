@@ -1,9 +1,5 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UsuarioService } from '../../services/usuario.service';
@@ -16,89 +12,167 @@ import { FooterComponent } from '../../components/footer/footer.component';
   standalone: true,
   imports: [
     CommonModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
     FormsModule,
     NavbarComponent,
     FooterComponent
   ],
   template: `
     <app-navbar></app-navbar>
-    <div class="container">
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Registro</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <form (ngSubmit)="onSubmit()">
-            <mat-form-field appearance="fill" class="full-width">
-              <mat-label>Username</mat-label>
-              <input matInput [(ngModel)]="usuario.username" name="username" required>
-            </mat-form-field>
-            <mat-form-field appearance="fill" class="full-width">
-              <mat-label>Password</mat-label>
-              <input matInput type="password" [(ngModel)]="usuario.password" name="password" required>
-            </mat-form-field>
-            <mat-form-field appearance="fill" class="full-width">
-              <mat-label>Email</mat-label>
-              <input matInput type="email" [(ngModel)]="usuario.email" name="email" required>
-            </mat-form-field>
-            <mat-form-field appearance="fill" class="full-width">
-              <mat-label>Nombre</mat-label>
-              <input matInput [(ngModel)]="usuario.nombre" name="nombre" required>
-            </mat-form-field>
-            <mat-form-field appearance="fill" class="full-width">
-              <mat-label>Apellido Paterno</mat-label>
-              <input matInput [(ngModel)]="usuario.apellidoPaterno" name="apellidoPaterno" required>
-            </mat-form-field>
-            <mat-form-field appearance="fill" class="full-width">
-              <mat-label>Edad</mat-label>
-              <input matInput type="number" [(ngModel)]="usuario.edad" name="edad" required>
-            </mat-form-field>
-            <mat-form-field appearance="fill" class="full-width">
-              <mat-label>Fecha de Nacimiento</mat-label>
-              <input matInput type="date" [(ngModel)]="usuario.fechaNacimiento" name="fechaNacimiento" required>
-            </mat-form-field>
-            <button mat-raised-button color="primary" type="submit">Registrar</button>
-          </form>
-        </mat-card-content>
-      </mat-card>
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+      <div class="card bg-dark text-light shadow-lg p-4" style="width: 100%; max-width: 500px;">
+        <h3 class="text-center mb-4">Registro</h3>
+        <form #registroForm="ngForm" (ngSubmit)="onSubmit()">
+
+          <!-- Username -->
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              name="username"
+              required
+              maxlength="10"
+              [(ngModel)]="usuario.username"
+              #usernameInput="ngModel"
+              [class.is-invalid]="usernameInput.invalid && (usernameInput.touched || registroForm.submitted)" />
+            <div *ngIf="usernameInput.invalid && (usernameInput.touched || registroForm.submitted)" class="invalid-feedback">
+              El username es obligatorio y no puede tener más de 10 caracteres.
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="mb-3 position-relative">
+            <label for="password" class="form-label">Contraseña</label>
+            <div class="input-group">
+              <input
+                [type]="mostrarPassword ? 'text' : 'password'"
+                class="form-control"
+                id="password"
+                name="password"
+                required
+                [(ngModel)]="usuario.password"
+                #passwordInput="ngModel"
+                [class.is-invalid]="!esPasswordValida(usuario.password) && (passwordInput.touched || registroForm.submitted)" />
+              <button type="button" class="btn btn-outline-secondary" (click)="togglePassword()" tabindex="-1">
+                <i class="bi" [ngClass]="mostrarPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+              </button>
+            </div>
+            <div *ngIf="!esPasswordValida(usuario.password) && (passwordInput.touched || registroForm.submitted)" class="invalid-feedback d-block">
+              La contraseña debe tener entre 6 y 16 caracteres, incluir letras, al menos un número y un carácter especial.
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label for="email" class="form-label">Correo Electrónico</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              required
+              [(ngModel)]="usuario.email"
+              #emailInput="ngModel"
+              [class.is-invalid]="!esEmailValido(usuario.email) && (emailInput.touched || registroForm.submitted)" />
+            <div *ngIf="!esEmailValido(usuario.email) && (emailInput.touched || registroForm.submitted)" class="invalid-feedback">
+              Ingresa un correo válido.
+            </div>
+          </div>
+
+          <!-- Nombre -->
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nombre"
+              name="nombre"
+              required
+              [(ngModel)]="usuario.nombre"
+              #nombreInput="ngModel"
+              [class.is-invalid]="!esNombreValido(usuario.nombre) && (nombreInput.touched || registroForm.submitted)" />
+            <div *ngIf="!esNombreValido(usuario.nombre) && (nombreInput.touched || registroForm.submitted)" class="invalid-feedback">
+              Ingrese mínimo 2 caracteres.
+            </div>
+          </div>
+
+          <!-- Apellido Paterno -->
+          <div class="mb-3">
+            <label for="apellidoPaterno" class="form-label">Apellido Paterno</label>
+            <input
+              type="text"
+              class="form-control"
+              id="apellidoPaterno"
+              name="apellidoPaterno"
+              required
+              [(ngModel)]="usuario.apellidoPaterno"
+              #apellidoInput="ngModel"
+              [class.is-invalid]="!esNombreValido(usuario.apellidoPaterno) && (apellidoInput.touched || registroForm.submitted)" />
+            <div *ngIf="!esNombreValido(usuario.apellidoPaterno) && (apellidoInput.touched || registroForm.submitted)" class="invalid-feedback">
+              Ingrese mínimo 2 caracteres.
+            </div>
+          </div>
+
+          <!-- Edad -->
+          <div class="mb-3">
+            <label for="edad" class="form-label">Edad</label>
+            <input
+              type="number"
+              class="form-control"
+              id="edad"
+              name="edad"
+              required
+              min="1"
+              [(ngModel)]="usuario.edad"
+              #edadInput="ngModel"
+              [class.is-invalid]="usuario.edad < 1 && (edadInput.touched || registroForm.submitted)" />
+            <div *ngIf="usuario.edad < 1 && (edadInput.touched || registroForm.submitted)" class="invalid-feedback">
+              La edad debe ser mayor o igual a 1.
+            </div>
+          </div>
+
+          <!-- Fecha de Nacimiento -->
+          <div class="mb-3">
+            <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+            <input
+              type="date"
+              class="form-control"
+              id="fechaNacimiento"
+              name="fechaNacimiento"
+              required
+              [(ngModel)]="usuario.fechaNacimiento"
+              #fechaInput="ngModel"
+              [class.is-invalid]="!usuario.fechaNacimiento && (fechaInput.touched || registroForm.submitted)" />
+            <div *ngIf="!usuario.fechaNacimiento && (fechaInput.touched || registroForm.submitted)" class="invalid-feedback">
+              La fecha es obligatoria.
+            </div>
+          </div>
+          <button type="submit" class="btn btn-warning w-100">Registrar</button>
+        </form>
+      </div>
     </div>
     <app-footer></app-footer>
   `,
   styles: [`
     :host {
-      display: block;
-      background-color: #121212;
-      width: 100vw;
+      display: flex;
+      flex-direction: column;
       min-height: 100vh;
-      margin: 0;
+      background-color: #121212;
+      width: 100%;
       overflow-x: hidden;
-      padding-bottom: 2rem;
     }
+
     .container {
+      flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 1rem;
       width: 100%;
-      min-height: calc(100vh - 70px);
       margin-top: 70px;
     }
-    mat-card {
-      width: 100%;
-      max-width: 400px;
-      background: rgba(30,30,30,0.8);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      color: #e0e0e0;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-      border-radius: 8px;
-    }
-    .full-width { width: 100%; }
-    mat-form-field { margin-bottom: 1rem; }
   `]
 })
 export class RegistroComponent {
@@ -112,11 +186,45 @@ export class RegistroComponent {
     edad: 0,
     fechaNacimiento: new Date()
   };
+
+  mostrarPassword = false; // 👁 para mostrar u ocultar la contraseña
+  mostrarErrorPassword = false;
+
   constructor(private usuarioService: UsuarioService, private router: Router) {}
+
+  togglePassword() {
+    this.mostrarPassword = !this.mostrarPassword;
+  }
+
   onSubmit() {
+    this.mostrarErrorPassword = false;
+
+    const passwordRegex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{6,16}$/;
+
+    if (!passwordRegex.test(this.usuario.password)) {
+      this.mostrarErrorPassword = true;
+      return;
+    }
+
     this.usuarioService.registrarUsuario(this.usuario).subscribe({
-      next: () => { this.router.navigate(['/login']); },
-      error: (error) => { console.error('Registration failed:', error); }
+      next: () => this.router.navigate(['/login']),
+      error: (error) => console.error('Registration failed:', error)
     });
+  }
+
+  esPasswordValida(password: string): boolean {
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{6,16}$/;
+    return regex.test(password || '');
+  }
+
+  esEmailValido(email: string): boolean {
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|cl)$/;
+    return regex.test(email || '');
+  }
+
+  esNombreValido(nombre: string): boolean {
+    const regex = /^[A-Za-zÁÉÍÓÚÑáéíóúñ]{2,}$/;
+    return regex.test(nombre || '');
   }
 }

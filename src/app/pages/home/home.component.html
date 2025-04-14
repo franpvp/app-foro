@@ -1,81 +1,86 @@
+<body>
 <app-navbar></app-navbar>
-    <div class="container">
-      <!-- Formulario de nueva publicación (solo si está logeado) -->
-      <div *ngIf="authEstaLogeado()" class="post-card">
-        <div class="card-body">
-          <h5 class="card-title">Crear nueva publicación</h5>
-          <form (ngSubmit)="crearNuevaPublicacion()">
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Título"
-                     [(ngModel)]="nuevaPublicacion.titulo" name="titulo" required>
-            </div>
-            <div class="form-group">
-              <textarea class="form-control" placeholder="¿Qué estás pensando?"
-                        [(ngModel)]="nuevaPublicacion.contenido" name="contenido" rows="3" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-warning w-100">Publicar</button>
-          </form>
-        </div>
+  <div class="container">
+    <!-- Formulario de nueva publicación (solo si está logeado) -->
+    <div *ngIf="authEstaLogeado()" class="post-card">
+      <div class="card-body">
+        <h5 class="card-title">Crear nueva publicación</h5>
+        <form (ngSubmit)="crearNuevaPublicacion()">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Título"
+                   [(ngModel)]="nuevaPublicacion.titulo" name="titulo" required>
+          </div>
+          <div class="form-group">
+                <textarea class="form-control" placeholder="¿Qué estás pensando?"
+                          [(ngModel)]="nuevaPublicacion.contenido" name="contenido" rows="3" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-warning w-100">Publicar</button>
+        </form>
       </div>
-      
-      <!-- Lista de publicaciones o mensaje si no hay -->
-      <ng-container *ngIf="publicaciones.length > 0; else noHayPublicaciones">
-        <ng-container *ngFor="let publicacion of publicaciones">
-          <div *ngIf="publicacion.idPublicacion !== undefined" class="post-card">
-            <div class="card-body">
-              <div class="post-header">
-                <img src="assets/avatar.png" class="avatar" alt="Avatar">
-                <div class="post-info">
-                  <h6 class="fw-bold">Usuario {{ publicacion.idUsuario }}</h6>
-                  <small>{{ publicacion.fechaCreacion | date:'short' }}</small>
-                </div>
+    </div>
+
+    <!-- Lista de publicaciones o mensaje si no hay -->
+    <ng-container *ngIf="publicaciones.length > 0; else noHayPublicaciones">
+      <ng-container *ngFor="let publicacion of publicaciones">
+        <div *ngIf="publicacion.idPublicacion !== undefined" class="post-card">
+          <div class="card-body">
+            <div class="post-header">
+              <img src="assets/perfil.png" class="avatar" alt="Avatar">
+              <div class="post-info">
+                <h6 class="fw-bold">{{ auth.getUsername() }}</h6>
+                <small>{{ publicacion.fechaCreacion | date:'short' }}</small>
               </div>
-              <h5 class="card-title">{{ publicacion.titulo }}</h5>
-              <p class="card-text">{{ publicacion.contenido }}</p>
-              <hr>
-              <!-- Sección de comentarios -->
-              <div class="comments-section">
-                <div *ngIf="authEstaLogeado(); else soloLectura">
-                  <input class="form-control" placeholder="Escribe un comentario..."
-                         [(ngModel)]="nuevosComentarios[publicacion.idPublicacion!]"
-                         [name]="'comment' + publicacion.idPublicacion">
-                  <button class="btn btn-sm btn-outline-light mt-2"
-                          (click)="agregarComentario(publicacion.idPublicacion!)">Comentar</button>
-                </div>
-                <ng-template #soloLectura>
-                  <div class="info-login">
-                    <i class="bi bi-info-circle-fill"></i>
-                    <small>Inicia sesión para unirte a la conversación</small>
-                  </div>
-                </ng-template>
-                <div *ngFor="let comentario of comentarios[publicacion.idPublicacion!]" class="comment">
-                  <div>
-                    <span class="fw-bold">Usuario {{ comentario.idUsuario }}</span>
-                    <p>{{ comentario.contenido }}</p>
-                  </div>
-                  <button *ngIf="authEstaLogeado() && comentario.idUsuario === userId"
-                          class="btn btn-sm btn-danger"
-                          (click)="eliminarComentario(comentario.idComentario!, publicacion.idPublicacion!)">
-                    <i class="bi bi-trash"></i>
-                  </button>
-                </div>
+            </div>
+            <h5 class="card-title">{{ publicacion.titulo }}</h5>
+            <p class="card-text">{{ publicacion.contenido }}</p>
+            <hr>
+            <!-- Sección de comentarios -->
+            <div class="comments-section">
+              <div *ngIf="authEstaLogeado(); else soloLectura" class="comment-input-section">
+                <input class="form-control" placeholder="Escribe un comentario..."
+                       [(ngModel)]="nuevosComentarios[publicacion.idPublicacion!]"
+                       [name]="'comment' + publicacion.idPublicacion">
+                <button class="btn btn-sm btn-outline-light mt-2"
+                        (click)="agregarComentario(publicacion.idPublicacion!)">Comentar</button>
               </div>
-              <!-- Opciones del dueño de la publicación -->
-              <div class="text-end mt-3" *ngIf="publicacion.idUsuario === userId">
-                <button class="btn btn-sm btn-danger"
-                        (click)="eliminarPublicacion(publicacion.idPublicacion!)">
-                  <i class="bi bi-trash-fill me-1"></i>Eliminar publicación
+
+              <ng-template #soloLectura>
+                <div class="info-login">
+                  <i class="bi bi-info-circle-fill"></i>
+                  <small>Inicia sesión para unirte a la conversación</small>
+                </div>
+              </ng-template>
+
+              <div *ngFor="let comentario of comentarios[publicacion.idPublicacion!]" class="comment d-flex justify-content-between align-items-start mt-2 p-2 bg-light rounded">
+                <div>
+                  <span class="fw-bold">{{ auth.getUsername() }}</span>
+                  <p class="mb-0">{{ comentario.contenido }}</p>
+                </div>
+                <button *ngIf="authEstaLogeado() && comentario.idUsuario === userId"
+                        class="btn btn-sm btn-danger ms-2"
+                        (click)="eliminarComentario(comentario.idComentario!, publicacion.idPublicacion!)">
+                  <i class="bi bi-trash"></i>
                 </button>
               </div>
             </div>
+            <!-- Opciones del dueño de la publicación -->
+            <div class="text-end mt-3" *ngIf="publicacion.idUsuario === userId">
+              <button class="btn btn-sm btn-danger"
+                      (click)="eliminarPublicacion(publicacion.idPublicacion!)">
+                <i class="bi bi-trash-fill me-1"></i>Eliminar publicación
+              </button>
+            </div>
           </div>
-        </ng-container>
-      </ng-container>
-      <ng-template #noHayPublicaciones>
-        <div class="no-posts">
-          <i class="bi bi-megaphone-fill"></i>
-          <p>No hay publicaciones por ahora. ¡Sé la primera en compartir algo!</p>
         </div>
-      </ng-template>
-    </div>
-    <app-footer></app-footer>
+      </ng-container>
+    </ng-container>
+    <ng-template #noHayPublicaciones>
+      <div class="no-posts">
+        <i class="bi bi-megaphone-fill"></i>
+        <p>No hay publicaciones por ahora. ¡Sé el primero en compartir algo!</p>
+      </div>
+    </ng-template>
+  </div>
+  <app-footer></app-footer>
+
+</body>
