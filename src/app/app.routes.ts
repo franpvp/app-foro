@@ -23,6 +23,11 @@ export const routes: Routes = [
       import('./pages/registro/registro.component').then(m => m.RegistroComponent)
   },
   {
+    path: 'recuperar-contrasena',
+    loadComponent: () =>
+      import('./pages/recuperar-contrasena/recuperar-contrasena.component').then(m => m.RecuperarContrasenaComponent)
+  },
+  {
     path: 'perfil',
     loadComponent: () =>
       import('./pages/perfil/perfil.component').then(m => m.PerfilComponent),
@@ -30,7 +35,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'home' // o podrías redirigir a un 404 si tienes una
+    redirectTo: 'home' // o redirigir a un 404 si tienes uno
   }
 ];
-

@@ -34,4 +34,11 @@ export class UsuarioService {
   existeUsuario(id: number): Observable<boolean> {
     return this.http.get<boolean>(`${this.baseUrl}/usuarios/existe/${id}`);
   }
+
+  cambiarContrasena(email: string, nuevaContrasena: string): Observable<UsuarioDTO> {
+    return this.http.put<UsuarioDTO>(
+      `${this.baseUrl}/usuarios/cambiar-contrasena`,
+      { email, nuevaContrasena }
+    );
+  }
 }

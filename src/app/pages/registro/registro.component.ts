@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { UsuarioService } from '../../services/usuario.service';
 import { UsuarioDTO } from '../../models/usuario.model';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
+import { FooterComponent } from '../../components/footer/footer.component';
 
 @Component({
   selector: 'app-registro',
@@ -20,7 +21,8 @@ import { NavbarComponent } from '../../components/navbar/navbar.component';
     MatInputModule,
     MatButtonModule,
     FormsModule,
-    NavbarComponent
+    NavbarComponent,
+    FooterComponent
   ],
   template: `
     <app-navbar></app-navbar>
@@ -35,45 +37,38 @@ import { NavbarComponent } from '../../components/navbar/navbar.component';
               <mat-label>Username</mat-label>
               <input matInput [(ngModel)]="usuario.username" name="username" required>
             </mat-form-field>
-
             <mat-form-field appearance="fill" class="full-width">
               <mat-label>Password</mat-label>
               <input matInput type="password" [(ngModel)]="usuario.password" name="password" required>
             </mat-form-field>
-
             <mat-form-field appearance="fill" class="full-width">
               <mat-label>Email</mat-label>
               <input matInput type="email" [(ngModel)]="usuario.email" name="email" required>
             </mat-form-field>
-
             <mat-form-field appearance="fill" class="full-width">
               <mat-label>Nombre</mat-label>
               <input matInput [(ngModel)]="usuario.nombre" name="nombre" required>
             </mat-form-field>
-
             <mat-form-field appearance="fill" class="full-width">
               <mat-label>Apellido Paterno</mat-label>
               <input matInput [(ngModel)]="usuario.apellidoPaterno" name="apellidoPaterno" required>
             </mat-form-field>
-
             <mat-form-field appearance="fill" class="full-width">
               <mat-label>Edad</mat-label>
               <input matInput type="number" [(ngModel)]="usuario.edad" name="edad" required>
             </mat-form-field>
-
             <mat-form-field appearance="fill" class="full-width">
               <mat-label>Fecha de Nacimiento</mat-label>
               <input matInput type="date" [(ngModel)]="usuario.fechaNacimiento" name="fechaNacimiento" required>
             </mat-form-field>
-
             <button mat-raised-button color="primary" type="submit">Registrar</button>
           </form>
         </mat-card-content>
       </mat-card>
     </div>
+    <app-footer></app-footer>
   `,
   styles: [`
-    /* Aplicado al host para forzar fondo oscuro a toda la pantalla */
     :host {
       display: block;
       background-color: #121212;
@@ -81,36 +76,29 @@ import { NavbarComponent } from '../../components/navbar/navbar.component';
       min-height: 100vh;
       margin: 0;
       overflow-x: hidden;
+      padding-bottom: 2rem;
     }
-    /* Contenedor principal: centra la tarjeta y deja espacio para el navbar */
     .container {
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 1rem;
       width: 100%;
-      /* Ajusta la altura según la presencia del navbar;
-         aquí se asume que el navbar ocupa 70px */
       min-height: calc(100vh - 70px);
       margin-top: 70px;
     }
-    /* Tarjeta de registro: fondo oscuro, sombra y bordes redondeados */
     mat-card {
       width: 100%;
       max-width: 400px;
-      background-color: #1e1e1e;
+      background: rgba(30,30,30,0.8);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       color: #e0e0e0;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
       border-radius: 8px;
     }
-    /* Asegura que los campos ocupen todo el ancho */
-    .full-width {
-      width: 100%;
-    }
-    /* Espacio entre campos */
-    mat-form-field {
-      margin-bottom: 1rem;
-    }
+    .full-width { width: 100%; }
+    mat-form-field { margin-bottom: 1rem; }
   `]
 })
 export class RegistroComponent {
@@ -124,20 +112,11 @@ export class RegistroComponent {
     edad: 0,
     fechaNacimiento: new Date()
   };
-
-  constructor(
-    private usuarioService: UsuarioService,
-    private router: Router
-  ) {}
-
+  constructor(private usuarioService: UsuarioService, private router: Router) {}
   onSubmit() {
     this.usuarioService.registrarUsuario(this.usuario).subscribe({
-      next: () => {
-        this.router.navigate(['/login']);
-      },
-      error: (error) => {
-        console.error('Registration failed:', error);
-      }
+      next: () => { this.router.navigate(['/login']); },
+      error: (error) => { console.error('Registration failed:', error); }
     });
   }
 }

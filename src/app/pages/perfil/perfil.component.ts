@@ -5,72 +5,40 @@ import { UsuarioService } from '../../services/usuario.service';
 import { UsuarioDTO } from '../../models/usuario.model';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { Router } from '@angular/router';
+import { FooterComponent } from '../../components/footer/footer.component';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, FormsModule, NavbarComponent],
+  imports: [CommonModule, FormsModule, NavbarComponent, FooterComponent],
   template: `
-    <!-- Navbar global -->
     <app-navbar></app-navbar>
-
     <div class="perfil-container">
-      <div class="card perfil-card">
-        <div class="card-header text-center">
+      <div class="perfil-card">
+        <div class="card-header">
           <h3 class="profile-title">Perfil</h3>
         </div>
         <div class="card-body">
-          <!-- Imagen de perfil centrada -->
-          <div class="text-center mb-3">
+          <div class="profile-image-container">
             <img src="assets/perfil.png" class="profile-img" alt="Profile Image">
           </div>
-          <!-- Mostrar username debajo de la imagen -->
-          <div class="text-center mb-3">
-            <p class="username">{{ usuario.username }}</p>
-          </div>
+          <div class="username">{{ usuario.username }}</div>
           <form (ngSubmit)="toggleEdit()">
-            <!-- Email (deshabilitado) -->
-            <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input type="email"
-                     id="email"
-                     class="form-control"
-                     [(ngModel)]="usuario.email"
-                     name="email"
-                     disabled>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" class="form-control" [(ngModel)]="usuario.email" name="email" disabled>
             </div>
-            <!-- Nombre -->
-            <div class="mb-3">
-              <label for="nombre" class="form-label">Nombre</label>
-              <input type="text"
-                     id="nombre"
-                     class="form-control"
-                     [(ngModel)]="usuario.nombre"
-                     name="nombre"
-                     [disabled]="!isEditing"
-                     required>
+            <div class="form-group">
+              <label>Nombre</label>
+              <input type="text" class="form-control" [(ngModel)]="usuario.nombre" name="nombre" [disabled]="!isEditing" required>
             </div>
-            <!-- Apellido Paterno -->
-            <div class="mb-3">
-              <label for="apellidoPaterno" class="form-label">Apellido Paterno</label>
-              <input type="text"
-                     id="apellidoPaterno"
-                     class="form-control"
-                     [(ngModel)]="usuario.apellidoPaterno"
-                     name="apellidoPaterno"
-                     [disabled]="!isEditing"
-                     required>
+            <div class="form-group">
+              <label>Apellido Paterno</label>
+              <input type="text" class="form-control" [(ngModel)]="usuario.apellidoPaterno" name="apellidoPaterno" [disabled]="!isEditing" required>
             </div>
-            <!-- Edad -->
-            <div class="mb-3">
-              <label for="edad" class="form-label">Edad</label>
-              <input type="text"
-                     id="edad"
-                     class="form-control"
-                     [(ngModel)]="usuario.edad"
-                     name="edad"
-                     [disabled]="!isEditing"
-                     required>
+            <div class="form-group">
+              <label>Edad</label>
+              <input type="text" class="form-control" [(ngModel)]="usuario.edad" name="edad" [disabled]="!isEditing" required>
             </div>
             <button type="submit" class="btn btn-primary w-100">
               {{ isEditing ? 'Guardar Cambios' : 'Editar' }}
@@ -79,48 +47,31 @@ import { Router } from '@angular/router';
         </div>
       </div>
     </div>
+    <app-footer></app-footer>
   `,
   styles: [`
-    /* Host: cubrir toda la pantalla con fondo oscuro */
     :host {
       display: block;
-      width: 100vw;
-      min-height: 100vh;
       background-color: #121212;
+      min-height: 100vh;
       color: #e0e0e0;
-      margin: 0;
-      overflow-x: hidden;
+      padding-bottom: 2rem;
     }
-    /* Contenedor principal centrado */
     .perfil-container {
       max-width: 400px;
-      margin: 100px auto 1rem auto; /* Ajusta '100px' según la altura del navbar */
+      margin: 100px auto 1rem;
       padding: 1rem;
     }
-    /* Tarjeta de perfil personalizada */
     .perfil-card {
-      background-color: #1e1e1e;
-      border: none;
+      background: rgba(30,30,30,0.9);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      padding: 1rem;
     }
-    /* Título de perfil en blanco */
-    .profile-title {
-      color: #ffffff;
-    }
-    /* Ajuste de labels y campos de Bootstrap */
-    .form-label {
-      color: #e0e0e0;
-    }
-    .form-control {
-      background-color: #2c2c2c;
-      color: #e0e0e0;
-      border: none;
-    }
-    .form-control:focus {
-      box-shadow: none;
-    }
-    /* Imagen de perfil: tamaño forzado, redonda y centrada */
+    .profile-title { text-align: center; color: #fff; }
+    .profile-image-container { text-align: center; margin-bottom: 1rem; }
     .profile-img {
       width: 150px;
       height: 150px;
@@ -128,13 +79,17 @@ import { Router } from '@angular/router';
       border-radius: 50%;
       border: 3px solid #ff9800;
     }
-    /* Estilo para el username */
-    .username {
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: #ffffff;
-      margin: 0;
+    .username { text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-control {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 0.5rem;
+      color: #fff;
     }
+    label { color: #e0e0e0; }
+    button.btn { border-radius: 8px; }
   `]
 })
 export class PerfilComponent implements OnInit {
@@ -148,43 +103,22 @@ export class PerfilComponent implements OnInit {
     edad: 0,
     fechaNacimiento: new Date()
   };
-
   isEditing: boolean = false;
-
-  constructor(
-    private usuarioService: UsuarioService,
-    private router: Router
-  ) {}
-
+  constructor(private usuarioService: UsuarioService, private router: Router) {}
   ngOnInit(): void {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
-
-    if (!token || !userId) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
+    if (!token || !userId) { this.router.navigate(['/login']); return; }
     this.usuarioService.obtenerUsuarioPorId(Number(userId)).subscribe({
-      next: (data: UsuarioDTO) => {
-        this.usuario = data;
-      },
-      error: (error) => {
-        console.error('Error loading user profile:', error);
-        this.router.navigate(['/login']);
-      }
+      next: (data: UsuarioDTO) => { this.usuario = data; },
+      error: (error) => { console.error('Error loading user profile:', error); this.router.navigate(['/login']); }
     });
   }
-
   toggleEdit(): void {
-    if (!this.isEditing) {
-      this.isEditing = true;
-    } else {
+    if (!this.isEditing) { this.isEditing = true; }
+    else {
       this.usuarioService.modificarUsuario(this.usuario).subscribe({
-        next: (updatedUser) => {
-          this.usuario = updatedUser;
-          this.isEditing = false;
-        },
+        next: (updatedUser) => { this.usuario = updatedUser; this.isEditing = false; },
         error: (error) => console.error('Failed to update profile:', error)
       });
     }
