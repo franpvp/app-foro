@@ -33,5 +33,5 @@ export class ComentarioService {
   obtenerComentarioPorId(id: number): Observable<ComentarioDTO> {
     return this.http.get<ComentarioDTO>(`${this.baseUrl}/comentarios/comentario/${id}`);
   }
-  
+
 }
