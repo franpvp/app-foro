@@ -227,7 +227,6 @@ export class AdminComponent implements OnInit {
   }
 
   editarUsuario(user: UsuarioDTO): void {
-    // Redirige a la página de edición de usuario pasando el ID en la URL.
     this.router.navigate(['/admin/editar-usuario', user.id]);
   }
 
@@ -247,7 +246,6 @@ export class AdminComponent implements OnInit {
   }
 
   editarPublicacion(publicacion: PublicacionDTO): void {
-    // Redirige a la página de edición de publicación.
     this.router.navigate(['/admin/editar-publicacion', publicacion.idPublicacion]);
   }
 
@@ -267,7 +265,6 @@ export class AdminComponent implements OnInit {
   }
 
   editarComentario(comentario: ComentarioDTO): void {
-    // Redirige a la página de edición de comentario.
     this.router.navigate(['/admin/editar-comentario', comentario.idComentario]);
   }
 

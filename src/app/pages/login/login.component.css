@@ -1,0 +1,53 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #121212;
+}
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #121212;
+  overflow-x: hidden;
+}
+
+.login-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  margin-top: 70px;
+}
+
+.recover-link {
+  text-align: center;
+  margin-top: 0.75rem;
+}
+
+.recover-button {
+  background: transparent;
+  border: none;
+  color: #ff9800;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.3s ease;
+}
+
+.recover-button:hover {
+  color: #ffc107;
+}
+
+.logging-in {
+  animation: shake 0.5s;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}

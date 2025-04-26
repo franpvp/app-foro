@@ -1,0 +1,141 @@
+
+<body>
+<app-navbar></app-navbar>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card bg-dark text-light shadow-lg p-4" style="width: 100%; max-width: 500px;">
+    <h3 class="text-center mb-4">Registro</h3>
+    <form #registroForm="ngForm" (ngSubmit)="onSubmit()">
+
+      <!-- Username -->
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input
+          type="text"
+          class="form-control"
+          id="username"
+          name="username"
+          required
+          maxlength="10"
+          [(ngModel)]="usuario.username"
+          #usernameInput="ngModel"
+          [class.is-invalid]="usernameInput.invalid && (usernameInput.touched || registroForm.submitted)" />
+        <div *ngIf="usernameInput.invalid && (usernameInput.touched || registroForm.submitted)" class="invalid-feedback">
+          El username es obligatorio y no puede tener más de 10 caracteres.
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3 position-relative">
+        <label for="password" class="form-label">Contraseña</label>
+        <div class="input-group">
+          <input
+            [type]="mostrarPassword ? 'text' : 'password'"
+            class="form-control"
+            id="password"
+            name="password"
+            required
+            [(ngModel)]="usuario.password"
+            #passwordInput="ngModel"
+            [class.is-invalid]="!esPasswordValida(usuario.password) && (passwordInput.touched || registroForm.submitted)" />
+          <button type="button" class="btn btn-outline-secondary" (click)="togglePassword()" tabindex="-1">
+            <i class="bi" [ngClass]="mostrarPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </button>
+        </div>
+        <div *ngIf="!esPasswordValida(usuario.password) && (passwordInput.touched || registroForm.submitted)" class="invalid-feedback d-block">
+          La contraseña debe tener entre 6 y 16 caracteres, incluir letras, al menos un número y un carácter especial.
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <label for="email" class="form-label">Correo Electrónico</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          name="email"
+          required
+          [(ngModel)]="usuario.email"
+          #emailInput="ngModel"
+          [class.is-invalid]="!esEmailValido(usuario.email) && (emailInput.touched || registroForm.submitted)" />
+        <div *ngIf="!esEmailValido(usuario.email) && (emailInput.touched || registroForm.submitted)" class="invalid-feedback">
+          Ingresa un correo válido.
+        </div>
+      </div>
+
+      <!-- Nombre -->
+      <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre</label>
+        <input
+          type="text"
+          class="form-control"
+          id="nombre"
+          name="nombre"
+          required
+          [(ngModel)]="usuario.nombre"
+          #nombreInput="ngModel"
+          [class.is-invalid]="!esNombreValido(usuario.nombre) && (nombreInput.touched || registroForm.submitted)" />
+        <div *ngIf="!esNombreValido(usuario.nombre) && (nombreInput.touched || registroForm.submitted)" class="invalid-feedback">
+          Ingrese mínimo 2 caracteres.
+        </div>
+      </div>
+
+      <!-- Apellido Paterno -->
+      <div class="mb-3">
+        <label for="apellidoPaterno" class="form-label">Apellido Paterno</label>
+        <input
+          type="text"
+          class="form-control"
+          id="apellidoPaterno"
+          name="apellidoPaterno"
+          required
+          [(ngModel)]="usuario.apellidoPaterno"
+          #apellidoInput="ngModel"
+          [class.is-invalid]="!esNombreValido(usuario.apellidoPaterno) && (apellidoInput.touched || registroForm.submitted)" />
+        <div *ngIf="!esNombreValido(usuario.apellidoPaterno) && (apellidoInput.touched || registroForm.submitted)" class="invalid-feedback">
+          Ingrese mínimo 2 caracteres.
+        </div>
+      </div>
+
+      <!-- Edad -->
+      <div class="mb-3">
+        <label for="edad" class="form-label">Edad</label>
+        <input
+          type="number"
+          class="form-control"
+          id="edad"
+          name="edad"
+          required
+          min="1"
+          [(ngModel)]="usuario.edad"
+          #edadInput="ngModel"
+          [class.is-invalid]="usuario.edad < 1 && (edadInput.touched || registroForm.submitted)" />
+        <div *ngIf="usuario.edad < 1 && (edadInput.touched || registroForm.submitted)" class="invalid-feedback">
+          La edad debe ser mayor o igual a 1.
+        </div>
+      </div>
+
+      <!-- Fecha de Nacimiento -->
+      <div class="mb-3">
+        <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+        <input
+          type="date"
+          class="form-control"
+          id="fechaNacimiento"
+          name="fechaNacimiento"
+          required
+          [(ngModel)]="usuario.fechaNacimiento"
+          #fechaInput="ngModel"
+          [class.is-invalid]="!usuario.fechaNacimiento && (fechaInput.touched || registroForm.submitted)" />
+        <div *ngIf="!usuario.fechaNacimiento && (fechaInput.touched || registroForm.submitted)" class="invalid-feedback">
+          La fecha es obligatoria.
+        </div>
+      </div>
+      <button type="submit" class="btn btn-warning w-100">Registrar</button>
+    </form>
+  </div>
+</div>
+<app-footer></app-footer>
+
+</body>
+

@@ -12,7 +12,6 @@ import { FooterComponent } from '../../components/footer/footer.component';
 
 import { AuthService } from '../../services/auth.service';
 
-
 @Component({
   selector: 'app-home',
   standalone: true,

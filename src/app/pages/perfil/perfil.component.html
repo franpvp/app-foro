@@ -1,0 +1,41 @@
+
+<body>
+<app-navbar></app-navbar>
+<div class="perfil-container">
+  <div class="perfil-card">
+    <div class="card-header">
+      <h3 class="profile-title">Perfil</h3>
+    </div>
+    <div class="card-body">
+      <div class="profile-image-container">
+        <img src="assets/perfil.png" class="profile-img" alt="Profile Image">
+      </div>
+      <div class="username">{{ usuario.username }}</div>
+      <form (ngSubmit)="toggleEdit()">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" class="form-control" [(ngModel)]="usuario.email" name="email" disabled>
+        </div>
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" class="form-control" [(ngModel)]="usuario.nombre" name="nombre" [disabled]="!isEditing" required>
+        </div>
+        <div class="form-group">
+          <label>Apellido Paterno</label>
+          <input type="text" class="form-control" [(ngModel)]="usuario.apellidoPaterno" name="apellidoPaterno" [disabled]="!isEditing" required>
+        </div>
+        <div class="form-group">
+          <label>Edad</label>
+          <input type="text" class="form-control" [(ngModel)]="usuario.edad" name="edad" [disabled]="!isEditing" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">
+          {{ isEditing ? 'Guardar Cambios' : 'Editar' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>
+
+</body>
+

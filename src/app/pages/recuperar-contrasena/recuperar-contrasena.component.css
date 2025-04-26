@@ -1,0 +1,58 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #121212;
+}
+
+:host {
+  display: block;
+  background-color: #121212;
+  color: #e0e0e0;
+  min-height: 100vh;
+  padding: 1rem;
+}
+.container {
+  max-width: 400px;
+  margin: 100px auto;
+  padding: 1rem;
+  background: rgba(30, 30, 30, 0.9);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.form-group {
+  margin-bottom: 1rem;
+}
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+input {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: none;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+}
+button {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  background: linear-gradient(45deg, #833ab4, #ee2a7b);
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+button:hover {
+  background: linear-gradient(45deg, #ee2a7b, #833ab4);
+}
