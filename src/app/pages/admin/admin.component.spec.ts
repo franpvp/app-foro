@@ -1,217 +1,228 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { AdminComponent } from './admin.component';
 import { UsuarioService } from '../../services/usuario.service';
 import { PublicacionService } from '../../services/publicacion.service';
 import { ComentarioService } from '../../services/comentario.service';
-import { AuthService } from '../../services/auth.service';
-import { NavigationEnd, Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of, throwError } from 'rxjs';
 import { UsuarioDTO } from '../../models/usuario.model';
 import { PublicacionDTO } from '../../models/publicacion.model';
 import { ComentarioDTO } from '../../models/comentario.model';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 
-let component: AdminComponent;
-let fixture: ComponentFixture<AdminComponent>;
-let usuarioService: jasmine.SpyObj<UsuarioService>;
-let publicacionService: jasmine.SpyObj<PublicacionService>;
-let comentarioService: jasmine.SpyObj<ComentarioService>;
-let mockAuthService: jasmine.SpyObj<AuthService>;
-let router: jasmine.SpyObj<Router>;
+describe('AdminComponent', () => {
+  let component: AdminComponent;
+  let fixture: ComponentFixture<AdminComponent>;
+  let mockUsuarioService: jasmine.SpyObj<UsuarioService>;
+  let mockPublicacionService: jasmine.SpyObj<PublicacionService>;
+  let mockComentarioService: jasmine.SpyObj<ComentarioService>;
+  let mockRouter: jasmine.SpyObj<Router>;
+  let mockAuthService: jasmine.SpyObj<AuthService>;
 
-beforeEach(async () => {
-  usuarioService = jasmine.createSpyObj('UsuarioService', ['obtenerUsuarios', 'eliminarUsuario']);
-  publicacionService = jasmine.createSpyObj('PublicacionService', ['obtenerPublicaciones', 'eliminarPublicacion']);
-  comentarioService = jasmine.createSpyObj('ComentarioService', ['obtenerTodosLosComentarios', 'eliminarComentario']);
-  router = jasmine.createSpyObj('Router', ['navigate']);
-  (router as any).events = of(new NavigationEnd(0, '/', '/'));
+  beforeEach(async () => {
+    mockUsuarioService = jasmine.createSpyObj('UsuarioService', [
+      'obtenerUsuarios',
+      'eliminarUsuario'
+    ]);
+    mockPublicacionService = jasmine.createSpyObj('PublicacionService', [
+      'obtenerPublicaciones',
+      'eliminarPublicacion'
+    ]);
+    mockComentarioService = jasmine.createSpyObj('ComentarioService', [
+      'obtenerTodosLosComentarios',
+      'eliminarComentario'
+    ]);
+    mockRouter = jasmine.createSpyObj('Router', ['navigate']);
+    mockAuthService = jasmine.createSpyObj('AuthService', ['isLoggedIn']);
 
-  usuarioService.obtenerUsuarios.and.returnValue(of([]));
-  publicacionService.obtenerPublicaciones.and.returnValue(of([]));
-  comentarioService.obtenerTodosLosComentarios.and.returnValue(of([]));
-  usuarioService.eliminarUsuario.and.returnValue(of(void 0));
-  publicacionService.eliminarPublicacion.and.returnValue(of(void 0));
-  comentarioService.eliminarComentario.and.returnValue(of(void 0));
+    // Set default return values for listar methods
+    mockUsuarioService.obtenerUsuarios.and.returnValue(of([]));
+    mockPublicacionService.obtenerPublicaciones.and.returnValue(of([]));
+    mockComentarioService.obtenerTodosLosComentarios.and.returnValue(of([]));
 
-  mockAuthService = jasmine.createSpyObj('AuthService', ['isLoggedIn']);
+    await TestBed.configureTestingModule({
+      imports: [AdminComponent, RouterTestingModule],
+      providers: [
+        { provide: UsuarioService, useValue: mockUsuarioService },
+        { provide: PublicacionService, useValue: mockPublicacionService },
+        { provide: ComentarioService, useValue: mockComentarioService },
+        { provide: Router, useValue: mockRouter },
+        { provide: AuthService, useValue: mockAuthService }
+      ]
+    }).compileComponents();
 
-  await TestBed.configureTestingModule({
-    imports: [RouterTestingModule, AdminComponent],
-    providers: [
-      { provide: UsuarioService, useValue: usuarioService },
-      { provide: PublicacionService, useValue: publicacionService },
-      { provide: ComentarioService, useValue: comentarioService },
-      { provide: AuthService, useValue: mockAuthService },
-      { provide: ActivatedRoute, useValue: {} },
-      { provide: Router, useValue: router }
-    ],
-    schemas: [NO_ERRORS_SCHEMA]
-  }).compileComponents();
+    fixture = TestBed.createComponent(AdminComponent);
+    component = fixture.componentInstance;
+  });
 
-  fixture = TestBed.createComponent(AdminComponent);
-  component = fixture.componentInstance;
-});
+  it('debería crear el componente', () => {
+    expect(component).toBeTruthy();
+  });
 
-it('debería crear el componente', () => {
-  expect(component).toBeTruthy();
-});
+  it('debería cargar usuarios, publicaciones y comentarios en ngOnInit', fakeAsync(() => {
+    const usuariosMock: UsuarioDTO[] = [
+      { id: 1, username: 'u1' } as any
+    ];
+    const publicacionesMock: PublicacionDTO[] = [
+      { idPublicacion: 1, idUsuario: 1, titulo: 'T', contenido: 'C', fechaCreacion: new Date() }
+    ];
+    const comentariosMock: ComentarioDTO[] = [
+      { idComentario: 1, idPublicacion: 1, idUsuario: 1, contenido: 'X', fechaCreacion: new Date() }
+    ];
 
-it('debería tener activeTab por defecto "usuarios"', () => {
-  expect(component.activeTab).toBe('usuarios');
-});
+    mockUsuarioService.obtenerUsuarios.and.returnValue(of(usuariosMock));
+    mockPublicacionService.obtenerPublicaciones.and.returnValue(of(publicacionesMock));
+    mockComentarioService.obtenerTodosLosComentarios.and.returnValue(of(comentariosMock));
 
-it('selectTab debería cambiar el tab activo', () => {
-  component.selectTab('publicaciones');
-  expect(component.activeTab).toBe('publicaciones');
-});
+    component.ngOnInit();
+    tick();
 
-it('ngOnInit debería llamar a cargarUsuarios, cargarPublicaciones y cargarComentarios', () => {
-  spyOn(component, 'cargarUsuarios');
-  spyOn(component, 'cargarPublicaciones');
-  spyOn(component, 'cargarComentarios');
+    expect(component.usuarios).toEqual(usuariosMock);
+    expect(component.publicaciones).toEqual(publicacionesMock);
+    expect(component.comentarios).toEqual(comentariosMock);
+  }));
 
-  component.ngOnInit();
+  it('debería cambiar la pestaña activa al llamar selectTab', () => {
+    component.activeTab = 'usuarios';
+    component.selectTab('comentarios');
+    expect(component.activeTab).toBe('comentarios');
+  });
 
-  expect(component.cargarUsuarios).toHaveBeenCalled();
-  expect(component.cargarPublicaciones).toHaveBeenCalled();
-  expect(component.cargarComentarios).toHaveBeenCalled();
-});
+  it('debería navegar a editarUsuario', () => {
+    const user = { id: 2, username: 'usr' } as UsuarioDTO;
+    component.editarUsuario(user);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/admin/editar-usuario', user.id]);
+  });
 
-it('cargarUsuarios debería poblar la lista de usuarios', () => {
-  const users: UsuarioDTO[] = [{ id: 1, username: 'u1' } as any];
-  usuarioService.obtenerUsuarios.and.returnValue(of(users));
+  it('debería eliminar usuario cuando confirme', fakeAsync(() => {
+    const user = { id: 3, username: 'usr' } as UsuarioDTO;
+    spyOn(window, 'confirm').and.returnValue(true);
+    spyOn(window, 'alert');
+    spyOn(component, 'cargarUsuarios');
+    mockUsuarioService.eliminarUsuario.and.returnValue(of(void 0));
 
-  component.cargarUsuarios();
+    component.eliminarUsuario(user);
+    tick();
 
-  expect(component.usuarios).toEqual(users);
-});
+    expect(mockUsuarioService.eliminarUsuario).toHaveBeenCalledWith(user.id);
+    expect(window.alert).toHaveBeenCalledWith('Usuario eliminado');
+    expect(component.cargarUsuarios).toHaveBeenCalled();
+  }));
 
-it('cargarPublicaciones debería poblar la lista de publicaciones', () => {
-  const pubs: PublicacionDTO[] = [{ idPublicacion: 1, titulo: 't1', idUsuario: 1 } as any];
-  publicacionService.obtenerPublicaciones.and.returnValue(of(pubs));
+  it('debería manejar error al eliminar usuario', fakeAsync(() => {
+    const user = { id: 4, username: 'err' } as UsuarioDTO;
+    const error = new Error('Error');
+    spyOn(window, 'confirm').and.returnValue(true);
+    spyOn(window, 'alert');
+    spyOn(console, 'error');
+    mockUsuarioService.eliminarUsuario.and.returnValue(throwError(() => error));
 
-  component.cargarPublicaciones();
+    component.eliminarUsuario(user);
+    tick();
 
-  expect(component.publicaciones).toEqual(pubs);
-});
+    expect(console.error).toHaveBeenCalledWith('Error al eliminar usuario:', error);
+    expect(window.alert).toHaveBeenCalledWith('Error al eliminar el usuario');
+  }));
 
-it('cargarComentarios debería poblar la lista de comentarios en caso de éxito', () => {
-  const comms: ComentarioDTO[] = [{ idComentario: 1, contenido: 'c1', idUsuario: 1 } as any];
-  comentarioService.obtenerTodosLosComentarios.and.returnValue(of(comms));
+  it('debería navegar a editarPublicacion', () => {
+    const pub = {
+      idPublicacion: 5,
+      idUsuario: 1,
+      titulo: 'T',
+      contenido: 'C',
+      fechaCreacion: new Date()
+    } as PublicacionDTO;
+    component.editarPublicacion(pub);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/admin/editar-publicacion', pub.idPublicacion]);
+  });
 
-  component.cargarComentarios();
+  it('debería eliminar publicacion cuando confirme', fakeAsync(() => {
+    const pub = {
+      idPublicacion: 6,
+      idUsuario: 2,
+      titulo: 'T',
+      contenido: 'C',
+      fechaCreacion: new Date()
+    } as PublicacionDTO;
+    spyOn(window, 'confirm').and.returnValue(true);
+    spyOn(window, 'alert');
+    spyOn(component, 'cargarPublicaciones');
+    mockPublicacionService.eliminarPublicacion.and.returnValue(of(void 0));
 
-  expect(component.comentarios).toEqual(comms);
-});
+    component.eliminarPublicacion(pub);
+    tick();
 
-it('cargarComentarios debería registrar un error en caso de fallo', () => {
-  spyOn(console, 'error');
-  comentarioService.obtenerTodosLosComentarios.and.returnValue(throwError('err'));
+    expect(mockPublicacionService.eliminarPublicacion)
+      .toHaveBeenCalledWith(pub.idPublicacion, pub.idUsuario);
+    expect(window.alert).toHaveBeenCalledWith('Publicación eliminada');
+    expect(component.cargarPublicaciones).toHaveBeenCalled();
+  }));
 
-  component.cargarComentarios();
+  it('debería manejar error al eliminar publicacion', fakeAsync(() => {
+    const pub = {
+      idPublicacion: 7,
+      idUsuario: 3,
+      titulo: 'T',
+      contenido: 'C',
+      fechaCreacion: new Date()
+    } as PublicacionDTO;
+    const error = new Error('Error');
+    spyOn(window, 'confirm').and.returnValue(true);
+    spyOn(window, 'alert');
+    spyOn(console, 'error');
+    mockPublicacionService.eliminarPublicacion.and.returnValue(throwError(() => error));
 
-  expect(console.error).toHaveBeenCalledWith('Error al obtener comentarios:', 'err');
-});
+    component.eliminarPublicacion(pub);
+    tick();
 
-it('editarUsuario debería navegar a la ruta de edición de usuario', () => {
-  const user = { id: 2 } as UsuarioDTO;
-  component.editarUsuario(user);
-  expect(router.navigate).toHaveBeenCalledWith(['/admin/editar-usuario', user.id]);
-});
+    expect(console.error).toHaveBeenCalledWith('Error al eliminar publicación:', error);
+    expect(window.alert).toHaveBeenCalledWith('Error al eliminar la publicación');
+  }));
 
-it('editarPublicacion debería navegar a la ruta de edición de publicación', () => {
-  const pub = { idPublicacion: 3 } as PublicacionDTO;
-  component.editarPublicacion(pub);
-  expect(router.navigate).toHaveBeenCalledWith(['/admin/editar-publicacion', pub.idPublicacion]);
-});
+  it('debería navegar a editarComentario', () => {
+    const com = {
+      idComentario: 8,
+      idPublicacion: 1,
+      idUsuario: 1,
+      contenido: 'C',
+      fechaCreacion: new Date()
+    } as ComentarioDTO;
+    component.editarComentario(com);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/admin/editar-comentario', com.idComentario]);
+  });
 
-it('editarComentario debería navegar a la ruta de edición de comentario', () => {
-  const com = { idComentario: 4 } as ComentarioDTO;
-  component.editarComentario(com);
-  expect(router.navigate).toHaveBeenCalledWith(['/admin/editar-comentario', com.idComentario]);
-});
+  it('debería eliminar comentario cuando confirme', fakeAsync(() => {
+    const com = {
+      idComentario: 9,
+      idPublicacion: 1,
+      idUsuario: 4,
+      contenido: 'C',
+      fechaCreacion: new Date()
+    } as ComentarioDTO;
+    spyOn(window, 'confirm').and.returnValue(true);
+    spyOn(window, 'alert');
+    spyOn(component, 'cargarComentarios');
+    mockComentarioService.eliminarComentario.and.returnValue(of(void 0));
 
-it('eliminarUsuario no debería llamar al servicio si la confirmación es falsa', () => {
-  (window.confirm as jasmine.Spy).and.returnValue(false);
-  component.eliminarUsuario({ id: 5, username: 'u5' } as any);
-  expect(usuarioService.eliminarUsuario).not.toHaveBeenCalled();
-});
+    component.eliminarComentario(com);
+    tick();
 
-it('eliminarUsuario debería eliminar y recargar en caso de éxito', () => {
-  (window.confirm as jasmine.Spy).and.returnValue(true);
-  spyOn(component, 'cargarUsuarios');
+    expect(mockComentarioService.eliminarComentario)
+      .toHaveBeenCalledWith(com.idComentario, com.idUsuario);
+    expect(window.alert).toHaveBeenCalledWith('Comentario eliminado');
+    expect(component.cargarComentarios).toHaveBeenCalled();
+  }));
 
-  component.eliminarUsuario({ id: 5, username: 'u5' } as any);
+  it('debería manejar error al cargar comentarios', fakeAsync(() => {
+    const error = new Error('Error');
+    mockComentarioService.obtenerTodosLosComentarios.and.returnValue(throwError(() => error));
+    spyOn(console, 'error');
 
-  expect(usuarioService.eliminarUsuario).toHaveBeenCalledWith(5);
-  expect(window.alert).toHaveBeenCalledWith('Usuario eliminado');
-  expect(component.cargarUsuarios).toHaveBeenCalled();
-});
+    component.cargarComentarios();
+    tick();
 
-it('eliminarUsuario debería mostrar alerta en caso de fallo', () => {
-  (window.confirm as jasmine.Spy).and.returnValue(true);
-  usuarioService.eliminarUsuario.and.returnValue(throwError('err'));
-  spyOn(console, 'error');
-
-  component.eliminarUsuario({ id: 5, username: 'u5' } as any);
-
-  expect(console.error).toHaveBeenCalledWith('Error al eliminar usuario:', 'err');
-  expect(window.alert).toHaveBeenCalledWith('Error al eliminar el usuario');
-});
-
-it('eliminarPublicacion no debería llamar al servicio si la confirmación es falsa', () => {
-  (window.confirm as jasmine.Spy).and.returnValue(false);
-  component.eliminarPublicacion({ idPublicacion: 6, idUsuario: 1 } as any);
-  expect(publicacionService.eliminarPublicacion).not.toHaveBeenCalled();
-});
-
-it('eliminarPublicacion debería eliminar y recargar en caso de éxito', () => {
-  (window.confirm as jasmine.Spy).and.returnValue(true);
-  spyOn(component, 'cargarPublicaciones');
-
-  component.eliminarPublicacion({ idPublicacion: 6, idUsuario: 1 } as any);
-
-  expect(publicacionService.eliminarPublicacion).toHaveBeenCalledWith(6, 1);
-  expect(window.alert).toHaveBeenCalledWith('Publicación eliminada');
-  expect(component.cargarPublicaciones).toHaveBeenCalled();
-});
-
-it('eliminarPublicacion debería mostrar alerta en caso de fallo', () => {
-  (window.confirm as jasmine.Spy).and.returnValue(true);
-  publicacionService.eliminarPublicacion.and.returnValue(throwError('err'));
-  spyOn(console, 'error');
-
-  component.eliminarPublicacion({ idPublicacion: 6, idUsuario: 1 } as any);
-
-  expect(console.error).toHaveBeenCalledWith('Error al eliminar publicación:', 'err');
-  expect(window.alert).toHaveBeenCalledWith('Error al eliminar la publicación');
-});
-
-it('eliminarComentario no debería llamar al servicio si la confirmación es falsa', () => {
-  (window.confirm as jasmine.Spy).and.returnValue(false);
-  component.eliminarComentario({ idComentario: 7, idUsuario: 1 } as any);
-  expect(comentarioService.eliminarComentario).not.toHaveBeenCalled();
-});
-
-it('eliminarComentario debería eliminar y recargar en caso de éxito', () => {
-  (window.confirm as jasmine.Spy).and.returnValue(true);
-  spyOn(component, 'cargarComentarios');
-
-  component.eliminarComentario({ idComentario: 7, idUsuario: 1 } as any);
-
-  expect(comentarioService.eliminarComentario).toHaveBeenCalledWith(7, 1);
-  expect(window.alert).toHaveBeenCalledWith('Comentario eliminado');
-  expect(component.cargarComentarios).toHaveBeenCalled();
-});
-
-it('eliminarComentario debería mostrar alerta en caso de fallo', () => {
-  (window.confirm as jasmine.Spy).and.returnValue(true);
-  comentarioService.eliminarComentario.and.returnValue(throwError('err'));
-  spyOn(console, 'error');
-
-  component.eliminarComentario({ idComentario: 7, idUsuario: 1 } as any);
-
-  expect(console.error).toHaveBeenCalledWith('Error al eliminar comentario:', 'err');
-  expect(window.alert).toHaveBeenCalledWith('Error al eliminar el comentario');
+    expect(component.comentarios.length).toBe(0);
+    expect(console.error).toHaveBeenCalledWith('Error al obtener comentarios:', error);
+  }));
 });
