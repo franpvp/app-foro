@@ -11,6 +11,10 @@ export class ComentarioService {
 
   constructor(private http: HttpClient) {}
 
+  obtenerIdUsuario(): number {
+      return Number(localStorage.getItem('userId') ?? 0);
+    }
+
   obtenerComentariosPorPublicacion(idPublicacion: number): Observable<ComentarioDTO[]> {
     return this.http.get<ComentarioDTO[]>(`${this.baseUrl}/comentarios/${idPublicacion}`);
   }
@@ -23,6 +27,7 @@ export class ComentarioService {
   }
 
   modificarComentario(comentario: ComentarioDTO): Observable<ComentarioDTO> {
+    comentario.idUsuario = this.obtenerIdUsuario();
     return this.http.put<ComentarioDTO>(`${this.baseUrl}/comentarios`, comentario);
   }
 

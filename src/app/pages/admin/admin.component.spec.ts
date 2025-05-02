@@ -14,10 +14,10 @@ import { AuthService } from '../../services/auth.service';
 describe('AdminComponent', () => {
   let component: AdminComponent;
   let fixture: ComponentFixture<AdminComponent>;
+  let router: Router;
   let mockUsuarioService: jasmine.SpyObj<UsuarioService>;
   let mockPublicacionService: jasmine.SpyObj<PublicacionService>;
   let mockComentarioService: jasmine.SpyObj<ComentarioService>;
-  let mockRouter: jasmine.SpyObj<Router>;
   let mockAuthService: jasmine.SpyObj<AuthService>;
 
   beforeEach(async () => {
@@ -33,7 +33,6 @@ describe('AdminComponent', () => {
       'obtenerTodosLosComentarios',
       'eliminarComentario'
     ]);
-    mockRouter = jasmine.createSpyObj('Router', ['navigate']);
     mockAuthService = jasmine.createSpyObj('AuthService', ['isLoggedIn']);
 
     // Set default return values for listar methods
@@ -42,18 +41,18 @@ describe('AdminComponent', () => {
     mockComentarioService.obtenerTodosLosComentarios.and.returnValue(of([]));
 
     await TestBed.configureTestingModule({
-      imports: [AdminComponent, RouterTestingModule],
+      imports: [AdminComponent, RouterTestingModule.withRoutes([])],
       providers: [
         { provide: UsuarioService, useValue: mockUsuarioService },
         { provide: PublicacionService, useValue: mockPublicacionService },
         { provide: ComentarioService, useValue: mockComentarioService },
-        { provide: Router, useValue: mockRouter },
         { provide: AuthService, useValue: mockAuthService }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AdminComponent);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
   });
 
   it('debería crear el componente', () => {
@@ -90,9 +89,10 @@ describe('AdminComponent', () => {
   });
 
   it('debería navegar a editarUsuario', () => {
+    spyOn(router, 'navigate');
     const user = { id: 2, username: 'usr' } as UsuarioDTO;
     component.editarUsuario(user);
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/admin/editar-usuario', user.id]);
+    expect(router.navigate).toHaveBeenCalledWith(['/admin/editar-usuario', user.id]);
   });
 
   it('debería eliminar usuario cuando confirme', fakeAsync(() => {
@@ -126,6 +126,7 @@ describe('AdminComponent', () => {
   }));
 
   it('debería navegar a editarPublicacion', () => {
+    spyOn(router, 'navigate');
     const pub = {
       idPublicacion: 5,
       idUsuario: 1,
@@ -134,7 +135,7 @@ describe('AdminComponent', () => {
       fechaCreacion: new Date()
     } as PublicacionDTO;
     component.editarPublicacion(pub);
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/admin/editar-publicacion', pub.idPublicacion]);
+    expect(router.navigate).toHaveBeenCalledWith(['/admin/editar-publicacion', pub.idPublicacion]);
   });
 
   it('debería eliminar publicacion cuando confirme', fakeAsync(() => {
@@ -181,6 +182,7 @@ describe('AdminComponent', () => {
   }));
 
   it('debería navegar a editarComentario', () => {
+    spyOn(router, 'navigate');
     const com = {
       idComentario: 8,
       idPublicacion: 1,
@@ -189,7 +191,7 @@ describe('AdminComponent', () => {
       fechaCreacion: new Date()
     } as ComentarioDTO;
     component.editarComentario(com);
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/admin/editar-comentario', com.idComentario]);
+    expect(router.navigate).toHaveBeenCalledWith(['/admin/editar-comentario', com.idComentario]);
   });
 
   it('debería eliminar comentario cuando confirme', fakeAsync(() => {

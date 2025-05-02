@@ -27,6 +27,7 @@ export class PerfilComponent implements OnInit {
     fechaNacimiento: new Date()
   };
   isEditing: boolean = false;
+  public saveMessage: string = '';
   constructor(private usuarioService: UsuarioService, private router: Router) {}
   ngOnInit(): void {
     const token = localStorage.getItem('token');
@@ -38,10 +39,11 @@ export class PerfilComponent implements OnInit {
     });
   }
   toggleEdit(): void {
+    this.saveMessage = '';
     if (!this.isEditing) { this.isEditing = true; }
     else {
       this.usuarioService.modificarUsuario(this.usuario).subscribe({
-        next: (updatedUser) => { this.usuario = updatedUser; this.isEditing = false; },
+        next: (updatedUser) => { this.usuario = updatedUser; this.isEditing = false; this.saveMessage = 'Datos de perfil actualizados'; },
         error: (error) => console.error('Failed to update profile:', error)
       });
     }

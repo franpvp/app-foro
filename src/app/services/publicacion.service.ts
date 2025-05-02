@@ -11,6 +11,10 @@ export class PublicacionService {
 
   constructor(private http: HttpClient) {}
 
+  obtenerIdUsuario(): number {
+    return Number(localStorage.getItem('userId') ?? 0);
+  }
+
   obtenerPublicaciones(): Observable<PublicacionDTO[]> {
     return this.http.get<PublicacionDTO[]>(`${this.baseUrl}/publicaciones`);
   }
@@ -24,6 +28,7 @@ export class PublicacionService {
   }
 
   modificarPublicacion(publicacion: PublicacionDTO): Observable<PublicacionDTO> {
+    publicacion.idUsuario = this.obtenerIdUsuario();
     return this.http.put<PublicacionDTO>(`${this.baseUrl}/publicaciones`, publicacion);
   }
 

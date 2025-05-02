@@ -12,64 +12,121 @@ html, body {
   padding-top: 80px;
   font-family: 'Segoe UI', sans-serif;
 }
+/* Contenedor centrado y responsivo */
 .admin-container {
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 1rem;
-  background: rgba(30,30,30,0.9);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
 }
-h2 {
+
+.admin-card {
+  background: rgba(20, 20, 20, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  width: 100%;
+  max-width: 1000px;
+  padding: 2rem;
+  color: #ddd;
+}
+
+/* Títulos */
+.admin-title {
+  margin: 0 0 1.5rem;
+  font-size: 1.75rem;
+  color: #fff;
   text-align: center;
-  margin-bottom: 1.5rem;
 }
+
+.content h3 {
+  font-size: 1.25rem;
+  margin-top: 2rem;
+  color: #f5f5f5;
+}
+
+/* Pestañas */
 .tabs {
   display: flex;
   justify-content: center;
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
+
 .tabs button {
-  background: none;
-  border: 1px solid #ff9800;
-  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 2px solid #ff9800;
   color: #ff9800;
-  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.2s;
 }
+
+.tabs button:hover {
+  background: #ff9800;
+  color: #121212;
+}
+
 .tabs button.active {
   background: #ff9800;
-  color: #1e1e1e;
+  color: #121212;
 }
-.content {
-  overflow-x: auto;
-}
-table {
+
+/* Tabla */
+.admin-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 1rem;
+  margin-top: 0.5rem;
 }
-th, td {
-  padding: 0.75rem;
-  border: 1px solid #333;
+
+.admin-table th,
+.admin-table td {
+  padding: 0.75rem 1rem;
   text-align: left;
 }
-th {
-  background: rgba(255,255,255,0.1);
+
+.admin-table thead {
+  background: #2c2c2c;
 }
-button {
-  margin-right: 0.5rem;
-  padding: 0.25rem 0.5rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  background: linear-gradient(45deg, #833ab4, #ee2a7b);
+
+.admin-table th {
   color: #fff;
-  transition: background 0.3s ease;
+  font-weight: 600;
 }
-button:hover {
-  background: linear-gradient(45deg, #ee2a7b, #833ab4);
+
+.admin-table tbody tr {
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(255, 152, 0, 0.05);
+}
+
+/* Botones de acción */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn:hover {
+  opacity: 0.85;
+}
+
+.btn.edit {
+  background: #4caf50;
+  color: #fff;
+}
+
+.btn.delete {
+  background: #f44336;
+  color: #fff;
 }

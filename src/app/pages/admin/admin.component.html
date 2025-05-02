@@ -1,95 +1,107 @@
 <body>
 <app-navbar></app-navbar>
+
 <div class="admin-container">
-  <h2>Panel de Administración</h2>
-  <div class="tabs">
-    <button [class.active]="activeTab === 'usuarios'" (click)="selectTab('usuarios')">Usuarios</button>
-    <button [class.active]="activeTab === 'publicaciones'" (click)="selectTab('publicaciones')">Publicaciones</button>
-    <button [class.active]="activeTab === 'comentarios'" (click)="selectTab('comentarios')">Comentarios</button>
-  </div>
-  <div class="content">
-    <!-- Gestión de Usuarios -->
-    <div *ngIf="activeTab === 'usuarios'">
-      <h3>Gestión de Usuarios</h3>
-      <table>
-        <thead>
-        <tr>
-          <th>ID</th>
-          <th>Username</th>
-          <th>Email</th>
-          <th>Rol</th>
-          <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let user of usuarios">
-          <td>{{ user.id }}</td>
-          <td>{{ user.username }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.role }}</td>
-          <td>
-            <button (click)="editarUsuario(user)">Editar</button>
-            <button (click)="eliminarUsuario(user)">Eliminar</button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+  <div class="admin-card">
+    <h2 class="admin-title">Panel de Administración</h2>
+
+    <div class="tabs">
+      <button [class.active]="activeTab === 'usuarios'" (click)="selectTab('usuarios')">
+        Usuarios
+      </button>
+      <button [class.active]="activeTab === 'publicaciones'" (click)="selectTab('publicaciones')">
+        Publicaciones
+      </button>
+      <button [class.active]="activeTab === 'comentarios'" (click)="selectTab('comentarios')">
+        Comentarios
+      </button>
     </div>
-    <!-- Gestión de Publicaciones -->
-    <div *ngIf="activeTab === 'publicaciones'">
-      <h3>Gestión de Publicaciones</h3>
-      <table>
-        <thead>
-        <tr>
-          <th>ID</th>
-          <th>Título</th>
-          <th>Contenido</th>
-          <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let pub of publicaciones">
-          <td>{{ pub.idPublicacion }}</td>
-          <td>{{ pub.titulo }}</td>
-          <td>{{ pub.contenido }}</td>
-          <td>
-            <button (click)="editarPublicacion(pub)">Editar</button>
-            <button (click)="eliminarPublicacion(pub)">Eliminar</button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-    <!-- Gestión de Comentarios -->
-    <div *ngIf="activeTab === 'comentarios'">
-      <h3>Gestión de Comentarios</h3>
-      <table>
-        <thead>
-        <tr>
-          <th>ID</th>
-          <th>ID Usuario</th>
-          <th>Comentario</th>
-          <th>ID Publicación</th>
-          <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let comment of comentarios">
-          <td>{{ comment.idComentario }}</td>
-          <td>{{ comment.idUsuario }}</td>
-          <td>{{ comment.contenido }}</td>
-          <td>{{ comment.idPublicacion }}</td>
-          <td>
-            <button (click)="editarComentario(comment)">Editar</button>
-            <button (click)="eliminarComentario(comment)">Eliminar</button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+
+    <div class="content">
+      <!-- Gestión de Usuarios -->
+      <section *ngIf="activeTab === 'usuarios'">
+        <h3>Gestión de Usuarios</h3>
+        <table class="admin-table">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let user of usuarios">
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role }}</td>
+            <td class="actions">
+              <button class="btn edit" (click)="editarUsuario(user)">Editar</button>
+              <button class="btn delete" (click)="eliminarUsuario(user)">Eliminar</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Gestión de Publicaciones -->
+      <section *ngIf="activeTab === 'publicaciones'">
+        <h3>Gestión de Publicaciones</h3>
+        <table class="admin-table">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Contenido</th>
+            <th>Acciones</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let pub of publicaciones">
+            <td>{{ pub.idPublicacion }}</td>
+            <td>{{ pub.titulo }}</td>
+            <td>{{ pub.contenido }}</td>
+            <td class="actions">
+              <button class="btn edit" (click)="editarPublicacion(pub)">Editar</button>
+              <button class="btn delete" (click)="eliminarPublicacion(pub)">Eliminar</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Gestión de Comentarios -->
+      <section *ngIf="activeTab === 'comentarios'">
+        <h3>Gestión de Comentarios</h3>
+        <table class="admin-table">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>ID Usuario</th>
+            <th>Comentario</th>
+            <th>ID Publicación</th>
+            <th>Acciones</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let comment of comentarios">
+            <td>{{ comment.idComentario }}</td>
+            <td>{{ comment.idUsuario }}</td>
+            <td>{{ comment.contenido }}</td>
+            <td>{{ comment.idPublicacion }}</td>
+            <td class="actions">
+              <button class="btn edit" (click)="editarComentario(comment)">Editar</button>
+              <button class="btn delete" (click)="eliminarComentario(comment)">Eliminar</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </section>
     </div>
   </div>
 </div>
+
 <app-footer></app-footer>
-
-
 </body>

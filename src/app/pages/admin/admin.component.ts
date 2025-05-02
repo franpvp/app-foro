@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 
@@ -14,16 +14,15 @@ import { ComentarioDTO } from '../../models/comentario.model';
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, FooterComponent],
-
-})
-@Component({
-  selector: 'app-admin',
-  standalone: true,
+  imports: [
+      CommonModule,
+      RouterModule,
+      NavbarComponent,
+      FooterComponent
+    ],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.css']
 })
-
 export class AdminComponent implements OnInit {
   activeTab: 'usuarios' | 'publicaciones' | 'comentarios' = 'usuarios';
   usuarios: UsuarioDTO[] = [];

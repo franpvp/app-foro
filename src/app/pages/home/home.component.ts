@@ -7,6 +7,9 @@ import { ComentarioService } from '../../services/comentario.service';
 import { PublicacionDTO } from '../../models/publicacion.model';
 import { ComentarioDTO } from '../../models/comentario.model';
 
+import { UsuarioService } from '../../services/usuario.service';
+import { UsuarioDTO } from '../../models/usuario.model';
+
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 
@@ -25,6 +28,7 @@ export class HomeComponent implements OnInit {
   comentarios: { [key: number]: ComentarioDTO[] } = {};
   nuevosComentarios: { [key: number]: string } = {};
   userId: number = Number(this.obtenerUsuarioById);
+  userMap: Record<number,string> = {};
 
   nuevaPublicacion: PublicacionDTO = {
     idUsuario: Number(this.userId),
@@ -36,11 +40,13 @@ export class HomeComponent implements OnInit {
   constructor(
     public auth: AuthService,
     private publicacionService: PublicacionService,
-    private comentarioService: ComentarioService
+    private comentarioService: ComentarioService,
+    private usuarioService: UsuarioService
   ) {}
 
   ngOnInit(): void {
     this.setUserIdIfLogged();
+    this.cargarUsuarios();
     this.cargarPublicaciones();
   }
 
@@ -62,6 +68,20 @@ export class HomeComponent implements OnInit {
         console.error('Error al cargar publicaciones:', error);
         this.publicaciones = []; // ← importante para activar el mensaje en HTML
       }
+    });
+  }
+
+  cargarUsuarios(): void {
+    this.usuarioService.obtenerUsuarios().subscribe({
+      next: (users: UsuarioDTO[]) => {
+        this.userMap = users.reduce((map, u) => {
+          if (u.id !== undefined) {
+            map[u.id] = u.username;
+          }
+          return map;
+        }, {} as Record<number, string>);
+      },
+      error: (error) => console.error('Error al cargar usuarios:', error)
     });
   }
 
@@ -148,5 +168,8 @@ export class HomeComponent implements OnInit {
       return localStorage.getItem('username');
     }
 
+  getUsernameById(idUsuario: number): string {
+    return this.userMap[idUsuario] ?? 'Desconocido';
+  }
 
 }

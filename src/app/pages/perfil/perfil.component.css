@@ -5,16 +5,26 @@ html, body {
   background: #121212;
 }
 :host {
-  display: block;
-  background-color: #121212;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
-  color: #e0e0e0;
-  padding-bottom: 2rem;
+  background-color: #121212;
+  overflow-x: hidden;
+}
+.username {
+  text-align: center;
+  font-size: 1.5rem !important;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #fff;
 }
 .perfil-container {
-  max-width: 400px;
-  margin: 100px auto 1rem;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 1rem;
+  margin-top: 70px;
 }
 .perfil-card {
   background: rgba(30,30,30,0.9);
@@ -44,3 +54,28 @@ html, body {
 }
 label { color: #e0e0e0; }
 button.btn { border-radius: 8px; }
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+.save-message-popup {
+  background: rgba(30, 30, 30, 0.95);
+  border: 2px solid #ff9800;
+  color: #ffffff;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+  z-index: 1001;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  animation: fadeIn 0.3s ease, fadeOut 0.3s ease 2.7s;
+}

@@ -12,7 +12,7 @@ import { AuthService } from '../../services/auth.service';
     <div class="navbar-container">
       <!-- Logo -->
       <div class="logo">
-        <a routerLink="/home">
+        <a [routerLink]="auth.getUserRole() === 'ADMIN' ? '/admin' : '/home'">
           <img src="assets/logo-book.svg" alt="logo" class="logo-icon">
           <span class="logo-text">PublicaTodo</span>
         </a>
@@ -29,7 +29,14 @@ import { AuthService } from '../../services/auth.service';
       <ul class="nav-links" [class.active]="isMenuOpen">
         <ng-container *ngIf="auth.isLoggedIn(); else notLogged">
           <li class="user-greeting">Hola, {{ auth.getUsername() }}</li>
-          <li><a routerLink="/home">Inicio</a></li>
+          <li>
+            <a [routerLink]="auth.getUserRole() === 'ADMIN' ? '/admin' : '/home'">
+              Inicio
+            </a>
+          </li>
+          <li *ngIf="auth.getUserRole() === 'ADMIN'">
+            <a routerLink="/home">Ver sitio</a>
+          </li>
           <li><a routerLink="/perfil">Perfil</a></li>
           <li><a (click)="logout()" class="logout-link">Cerrar sesión</a></li>
         </ng-container>
