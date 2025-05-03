@@ -172,4 +172,12 @@ export class HomeComponent implements OnInit {
     return this.userMap[idUsuario] ?? 'Desconocido';
   }
 
+  /**
+   * Adjusts a Date or ISO date string to local timezone by removing the current offset.
+   */
+  adjustDate(dateValue: string | Date): Date {
+    const d = new Date(dateValue);
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+  }
+
 }

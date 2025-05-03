@@ -27,8 +27,8 @@
             <div class="post-header">
               <img src="assets/perfil.png" class="avatar" alt="Avatar">
               <div class="post-info">
-                <h6 class="fw-bold">{{ auth.getUsername() }}</h6>
-                <small>{{ publicacion.fechaCreacion | date:'short' }}</small>
+                <h6 class="fw-bold">{{ getUsernameById(publicacion.idUsuario) }}</h6>
+                <small>{{ publicacion.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}</small>
               </div>
             </div>
             <h5 class="card-title">{{ publicacion.titulo }}</h5>
@@ -52,9 +52,15 @@
               </ng-template>
 
               <div *ngFor="let comentario of comentarios[publicacion.idPublicacion!]" class="comment d-flex justify-content-between align-items-start mt-2 p-2 bg-light rounded">
-                <div>
-                  <span class="fw-bold">{{ getUsernameById(comentario.idUsuario) }}</span>
-                  <p class="mb-0">{{ comentario.contenido }}</p>
+                <div class="d-flex align-items-start">
+                  <img src="assets/perfil.png" class="avatar me-2" alt="Avatar">
+                  <div>
+                    <span class="fw-bold">{{ getUsernameById(comentario.idUsuario) }}</span>
+                    <small class="text-muted ms-2">
+                      {{ comentario.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}
+                    </small>
+                    <p class="mb-0">{{ comentario.contenido }}</p>
+                  </div>
                 </div>
                 <button *ngIf="authEstaLogeado() && comentario.idUsuario === userId"
                         class="btn btn-sm btn-danger ms-2"
