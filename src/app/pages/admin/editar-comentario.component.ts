@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ComentarioService } from '../../services/comentario.service';
+import { ComentarioService } from '../../services/comentarios/comentario.service';
 import { ComentarioDTO } from '../../models/comentario.model';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';

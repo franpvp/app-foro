@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ComentarioService } from './comentario.service';
-import { ComentarioDTO } from '../models/comentario.model';
+import { ComentarioDTO } from '../../models/comentario.model';
 
 describe('ComentarioService', () => {
   let service: ComentarioService;

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { LoginResponseDTO } from '../models/login-response.model';
+import { LoginResponseDTO } from '../../models/login-response.model';
 
 @Injectable({
   providedIn: 'root'

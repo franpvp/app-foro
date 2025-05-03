@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PublicacionService } from '../../services/publicacion.service';
+import { PublicacionService } from '../../services/publicaciones/publicacion.service';
 import { PublicacionDTO } from '../../models/publicacion.model';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';

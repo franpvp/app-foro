@@ -4,9 +4,9 @@ import { Router, RouterModule } from '@angular/router';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 
-import { UsuarioService } from '../../services/usuario.service';
-import { PublicacionService } from '../../services/publicacion.service';
-import { ComentarioService } from '../../services/comentario.service';
+import { UsuarioService } from '../../services/usuarios/usuario.service';
+import { PublicacionService } from '../../services/publicaciones/publicacion.service';
+import { ComentarioService } from '../../services/comentarios/comentario.service';
 import { UsuarioDTO } from '../../models/usuario.model';
 import { PublicacionDTO } from '../../models/publicacion.model';
 import { ComentarioDTO } from '../../models/comentario.model';

@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { HomeComponent } from './home.component';
 import { of, throwError } from 'rxjs';
-import { PublicacionService } from '../../services/publicacion.service';
-import { ComentarioService } from '../../services/comentario.service';
-import { AuthService } from '../../services/auth.service';
+import { PublicacionService } from '../../services/publicaciones/publicacion.service';
+import { ComentarioService } from '../../services/comentarios/comentario.service';
+import { AuthService } from '../../services/auth/auth.service';
 import { PublicacionDTO } from '../../models/publicacion.model';
 import { ComentarioDTO } from '../../models/comentario.model';
 import { RouterTestingModule } from '@angular/router/testing';

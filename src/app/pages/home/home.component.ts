@@ -2,18 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { PublicacionService } from '../../services/publicacion.service';
-import { ComentarioService } from '../../services/comentario.service';
+import { PublicacionService } from '../../services/publicaciones/publicacion.service';
+import { ComentarioService } from '../../services/comentarios/comentario.service';
 import { PublicacionDTO } from '../../models/publicacion.model';
 import { ComentarioDTO } from '../../models/comentario.model';
 
-import { UsuarioService } from '../../services/usuario.service';
+import { UsuarioService } from '../../services/usuarios/usuario.service';
 import { UsuarioDTO } from '../../models/usuario.model';
 
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-home',
