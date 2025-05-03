@@ -13,7 +13,6 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-
   login(username: string, password: string): Observable<LoginResponseDTO> {
     return this.http.post<LoginResponseDTO>(`${this.baseUrl}/login`, { username, password })
       .pipe(

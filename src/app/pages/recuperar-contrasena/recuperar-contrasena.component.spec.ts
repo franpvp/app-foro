@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { RecuperarContrasenaComponent } from './recuperar-contrasena.component';
 import { UsuarioService } from '../../services/usuario.service';
 import { AuthService } from '../../services/auth.service';
@@ -8,7 +8,13 @@ import { of, throwError } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-const mockAuthService = jasmine.createSpyObj('AuthService', ['isLoggedIn', 'logout', 'getUsername']);
+const mockAuthService = jasmine.createSpyObj('AuthService', [
+  'isLoggedIn',
+  'logout',
+  'getUsername',
+  'getUserRole'
+]);
+mockAuthService.getUserRole.and.returnValue('USER');
 
 describe('RecuperarContrasenaComponent', () => {
   let component: RecuperarContrasenaComponent;
@@ -18,8 +24,6 @@ describe('RecuperarContrasenaComponent', () => {
 
   beforeEach(async () => {
     mockUsuarioService = jasmine.createSpyObj('UsuarioService', ['cambiarContrasena']);
-    spyOn(window, 'alert');
-    spyOn(console, 'error');
 
     await TestBed.configureTestingModule({
       imports: [
@@ -45,38 +49,46 @@ describe('RecuperarContrasenaComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería cambiar la contraseña y redirigir a login si es exitoso', () => {
+  it('debería establecer showSuccess en true si el cambio de contraseña es exitoso', fakeAsync(() => {
     component.email = 'test@mail.com';
     component.nuevaContrasena = '123456';
+    component.confirmContrasena = '123456';
 
-    mockUsuarioService.cambiarContrasena.and.returnValue(of({
-      id: 1,
-      username: 'fran',
-      password: '123456',
-      email: 'fran@mail.com',
-      role: 'USER',
-      nombre: 'Francisca',
-      apellidoPaterno: 'Palma',
-      edad: 30,
-      fechaNacimiento: new Date()
-    }));
+    mockUsuarioService.cambiarContrasena.and.returnValue(of({}));
+
+    component.onSubmit();
+    tick();
+
+    expect(component.showSuccess).toBeTrue();
+  }));
+
+  it('debería establecer showMismatch en true si las contraseñas no coinciden', () => {
+    component.nuevaContrasena = 'abc123';
+    component.confirmContrasena = 'xyz456';
 
     component.onSubmit();
 
-    expect(mockUsuarioService.cambiarContrasena).toHaveBeenCalledWith('test@mail.com', '123456');
-    expect(window.alert).toHaveBeenCalledWith('Contraseña actualizada exitosamente.');
-    expect(router.navigate).toHaveBeenCalledWith(['/login']);
+    expect(component.showMismatch).toBeTrue();
+    expect(mockUsuarioService.cambiarContrasena).not.toHaveBeenCalled();
   });
 
-  it('debería manejar errores al cambiar la contraseña', () => {
+  it('debería establecer showMismatch en true si el servicio falla', fakeAsync(() => {
     component.email = 'fail@mail.com';
-    component.nuevaContrasena = 'errorpass';
+    component.nuevaContrasena = '123456';
+    component.confirmContrasena = '123456';
 
     mockUsuarioService.cambiarContrasena.and.returnValue(throwError(() => new Error('Error')));
 
     component.onSubmit();
+    tick();
 
-    expect(console.error).toHaveBeenCalledWith('Error al cambiar la contraseña', jasmine.any(Error));
-    expect(window.alert).toHaveBeenCalledWith('Error al cambiar la contraseña. Intenta nuevamente.');
+    expect(component.showMismatch).toBeTrue();
+  }));
+
+  it('debería redirigir a /login al cerrar el popup de éxito', () => {
+    component.onSuccessPopupClose();
+
+    expect(component.showSuccess).toBeFalse();
+    expect(router.navigate).toHaveBeenCalledWith(['/login']);
   });
 });

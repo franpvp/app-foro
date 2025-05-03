@@ -64,7 +64,7 @@ describe('AdminComponent', () => {
       { id: 1, username: 'u1' } as any
     ];
     const publicacionesMock: PublicacionDTO[] = [
-      { idPublicacion: 1, idUsuario: 1, titulo: 'T', contenido: 'C', fechaCreacion: new Date() }
+      { idPublicacion: 1, idUsuario: 1, titulo: 'T', categoria: 'C', contenido: 'C', fechaCreacion: new Date() }
     ];
     const comentariosMock: ComentarioDTO[] = [
       { idComentario: 1, idPublicacion: 1, idUsuario: 1, contenido: 'X', fechaCreacion: new Date() }
@@ -131,6 +131,7 @@ describe('AdminComponent', () => {
       idPublicacion: 5,
       idUsuario: 1,
       titulo: 'T',
+      categoria: 'C',
       contenido: 'C',
       fechaCreacion: new Date()
     } as PublicacionDTO;
@@ -143,6 +144,7 @@ describe('AdminComponent', () => {
       idPublicacion: 6,
       idUsuario: 2,
       titulo: 'T',
+      categoria: 'C',
       contenido: 'C',
       fechaCreacion: new Date()
     } as PublicacionDTO;
@@ -165,6 +167,7 @@ describe('AdminComponent', () => {
       idPublicacion: 7,
       idUsuario: 3,
       titulo: 'T',
+      categoria: 'C',
       contenido: 'C',
       fechaCreacion: new Date()
     } as PublicacionDTO;

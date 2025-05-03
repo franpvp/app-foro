@@ -7,6 +7,7 @@ import { AuthService } from '../../services/auth.service';
 import { PublicacionDTO } from '../../models/publicacion.model';
 import { ComentarioDTO } from '../../models/comentario.model';
 import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -31,7 +32,7 @@ describe('HomeComponent', () => {
     mockAuthService = jasmine.createSpyObj('AuthService', ['isLoggedIn']);
 
     await TestBed.configureTestingModule({
-      imports: [HomeComponent, RouterTestingModule],
+      imports: [HomeComponent, RouterTestingModule, HttpClientTestingModule],
       providers: [
         { provide: PublicacionService, useValue: mockPublicacionService },
         { provide: ComentarioService, useValue: mockComentarioService },
@@ -53,7 +54,7 @@ describe('HomeComponent', () => {
 
   it('debería cargar publicaciones y comentarios en ngOnInit', fakeAsync(() => {
     const publicacionesMock: PublicacionDTO[] = [
-      { idPublicacion: 1, idUsuario: 1, titulo: 'Test', contenido: 'Contenido', fechaCreacion: new Date() }
+      { idPublicacion: 1, idUsuario: 1, titulo: 'Test', categoria: 'Categoria' ,contenido: 'Contenido', fechaCreacion: new Date() }
     ];
     const comentariosMock: ComentarioDTO[] = [
       { idComentario: 1, idPublicacion: 1, idUsuario: 1, contenido: 'Comentario', fechaCreacion: new Date() }
@@ -73,7 +74,7 @@ describe('HomeComponent', () => {
     mockPublicacionService.crearPublicacion.and.returnValue(of({
       idUsuario: 1,
       titulo: 'Mock titulo',
-      categoria: 'Mock categoria'
+      categoria: 'Mock categoria',
       contenido: 'Mock contenido',
       fechaCreacion: new Date()
     }));
@@ -83,7 +84,7 @@ describe('HomeComponent', () => {
     component.nuevaPublicacion = {
       idUsuario: 1,
       titulo: 'Nueva',
-      categoria: 'Categoria'
+      categoria: 'Categoria',
       contenido: 'Contenido',
       fechaCreacion: new Date()
     };

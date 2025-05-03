@@ -12,9 +12,16 @@ describe('NavbarComponent', () => {
   let router: Router;
 
   beforeEach(async () => {
-    mockAuthService = jasmine.createSpyObj('AuthService', ['isLoggedIn', 'logout', 'getUsername']);
-    // Silence console.log in tests
-    spyOn(console, 'log');
+    mockAuthService = jasmine.createSpyObj('AuthService', [
+      'isLoggedIn',
+      'logout',
+      'getUsername',
+      'getUserRole' // agregado para evitar error en la plantilla
+    ]);
+
+    mockAuthService.getUserRole.and.returnValue('ADMIN'); // valor por defecto
+
+    spyOn(console, 'log'); // evita logs en consola de test
 
     await TestBed.configureTestingModule({
       imports: [NavbarComponent, RouterTestingModule],
@@ -27,7 +34,7 @@ describe('NavbarComponent', () => {
     component = fixture.componentInstance;
     router = TestBed.inject(Router);
     spyOn(router, 'navigate');
-    fixture.detectChanges(); // triggers ngOnInit
+    fixture.detectChanges(); // dispara ngOnInit y detección de cambios
   });
 
   it('should create the component', () => {
@@ -68,5 +75,10 @@ describe('NavbarComponent', () => {
   it('should return the username from localStorage', () => {
     localStorage.setItem('username', 'fran');
     expect(component.getUsername()).toBe('fran');
+  });
+
+  it('should get the role from AuthService', () => {
+    expect(mockAuthService.getUserRole).toHaveBeenCalled();
+    expect(mockAuthService.getUserRole()).toBe('ADMIN');
   });
 });

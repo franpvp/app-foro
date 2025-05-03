@@ -31,8 +31,14 @@ describe('RegistroComponent', () => {
   beforeEach(async () => {
     // Crear mocks de servicios
     mockUsuarioService = jasmine.createSpyObj('UsuarioService', ['registrarUsuario']);
-    mockAuthService = jasmine.createSpyObj('AuthService', ['isLoggedIn', 'getUsername', 'logout']);
-    // Silenciar log de NavbarComponent ngOnInit
+    mockAuthService = jasmine.createSpyObj('AuthService', [
+      'isLoggedIn',
+      'getUsername',
+      'logout',
+      'getUserRole' // 👈 necesario si se usa en el HTML
+    ]);
+    mockAuthService.getUserRole.and.returnValue('USER'); // 👈 valor simulado para tests
+
     spyOn(console, 'log');
     spyOn(console, 'error');
 

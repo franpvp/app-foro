@@ -13,6 +13,7 @@ describe('PublicacionService', () => {
     idPublicacion: 1,
     idUsuario: 1,
     titulo: 'Título de prueba',
+    categoria: 'Categoria de prueba',
     contenido: 'Contenido de prueba',
     fechaCreacion: new Date()
   };
