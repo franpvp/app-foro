@@ -1,21 +1,116 @@
-
 <body>
-  <app-navbar></app-navbar>
-  <div class="container">
-    <h2>Recuperar Contraseña</h2>
-    <form (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label>Email:</label>
-        <input type="email" [(ngModel)]="email" name="email" required />
+<app-navbar></app-navbar>
+
+<!-- Popup: Contraseñas no coinciden -->
+<div
+  *ngIf="showMismatch"
+  class="popup-overlay"
+  (click)="showMismatch = false"
+>
+  <div class="save-message-popup" (click)="$event.stopPropagation()">
+    Las contraseñas no coinciden
+  </div>
+</div>
+
+<!-- Popup: Éxito al cambiar contraseña -->
+<div
+  *ngIf="showSuccess"
+  class="popup-overlay position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+  (click)="onSuccessPopupClose()"
+>
+  <div class="save-message-popup" (click)="$event.stopPropagation()">
+    Contraseña cambiada correctamente
+  </div>
+</div>
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card bg-dark text-white shadow-lg p-4" style="width: 100%; max-width: 400px;">
+    <h2 class="text-center mb-4">Recuperar Contraseña</h2>
+
+    <form #recForm="ngForm" (ngSubmit)="onSubmit()" novalidate>
+      <!-- Email -->
+      <div class="form-group mb-3">
+        <label for="email" class="form-label">Email:</label>
+        <input
+          type="email"
+          id="email"
+          class="form-control bg-transparent text-white border border-secondary"
+          name="email"
+          [(ngModel)]="email"
+          #emailCtrl="ngModel"
+          required
+        />
+        <div *ngIf="recForm.submitted && emailCtrl.invalid" class="text-danger small">
+          El email es obligatorio.
+        </div>
       </div>
-      <div class="form-group">
-        <label>Nueva Contraseña:</label>
-        <input type="password" [(ngModel)]="nuevaContrasena" name="nuevaContrasena" required />
+
+      <!-- Nueva Contraseña -->
+      <div class="mb-3">
+        <label for="nuevaContrasena" class="form-label">Nueva Contraseña</label>
+        <div class="input-group">
+          <input
+            [type]="mostrarNuevaContrasena ? 'text' : 'password'"
+            id="nuevaContrasena"
+            name="nuevaContrasena"
+            class="form-control bg-transparent text-white border border-secondary"
+            [(ngModel)]="nuevaContrasena"
+            #nuevaCon="ngModel"
+            required
+          />
+          <span
+            class="input-group-text bg-transparent border border-secondary text-white"
+            style="cursor: pointer;"
+            (click)="toggleNuevaPassword()"
+          >
+            <i class="bi" [ngClass]="mostrarNuevaContrasena ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </span>
+        </div>
+        <div *ngIf="recForm.submitted && nuevaCon.invalid" class="text-danger small">
+          La contraseña es obligatoria.
+        </div>
       </div>
-      <button type="submit">Cambiar Contraseña</button>
+
+      <!-- Confirmar Contraseña -->
+      <div class="mb-3">
+        <label for="confirmContrasena" class="form-label">Confirmar Contraseña</label>
+        <div class="input-group">
+          <input
+            [type]="mostrarConfirmContrasena ? 'text' : 'password'"
+            id="confirmContrasena"
+            name="confirmContrasena"
+            class="form-control bg-transparent text-white border border-secondary"
+            [(ngModel)]="confirmContrasena"
+            #confirmCon="ngModel"
+            required
+          />
+          <span
+            class="input-group-text bg-transparent border border-secondary text-white"
+            style="cursor: pointer;"
+            (click)="toggleConfirmPassword()"
+          >
+            <i class="bi" [ngClass]="mostrarConfirmContrasena ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </span>
+        </div>
+        <div *ngIf="recForm.submitted && confirmCon.invalid" class="text-danger small">
+          La confirmación es obligatoria.
+        </div>
+        <div *ngIf="recForm.submitted && nuevaContrasena !== confirmContrasena" class="text-danger small">
+          Las contraseñas deben coincidir.
+        </div>
+      </div>
+
+      <!-- Botón enviar -->
+      <button
+        type="submit"
+        class="btn btn-warning w-100"
+        [disabled]="recForm.invalid || nuevaContrasena !== confirmContrasena"
+      >
+        Cambiar Contraseña
+      </button>
     </form>
   </div>
-  <app-footer></app-footer>
+</div>
 
+<app-footer></app-footer>
 </body>
-

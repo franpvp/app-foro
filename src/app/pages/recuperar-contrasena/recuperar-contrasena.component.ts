@@ -17,19 +17,50 @@ import { FooterComponent } from '../../components/footer/footer.component';
 export class RecuperarContrasenaComponent {
   email: string = '';
   nuevaContrasena: string = '';
+  mostrarPassword = false;
+  confirmContrasena: string = '';
+  mostrarNuevaContrasena: boolean = false;
+  mostrarConfirmContrasena: boolean = false;
+  showPopup: boolean = false;
+  showErrorPassword = false;
+  showMismatch: boolean = false;
+  showSuccess: boolean = false;
+
 
   constructor(private usuarioService: UsuarioService, private router: Router) {}
 
   onSubmit() {
+    if (this.nuevaContrasena !== this.confirmContrasena) {
+        this.showMismatch = true;
+        return;
+    }
     this.usuarioService.cambiarContrasena(this.email, this.nuevaContrasena).subscribe({
       next: () => {
-        alert('Contraseña actualizada exitosamente.');
-        this.router.navigate(['/login']);
+        this.showSuccess = true;
       },
       error: (err) => {
         console.error('Error al cambiar la contraseña', err);
-        alert('Error al cambiar la contraseña. Intenta nuevamente.');
+        this.showMismatch = true;
       }
     });
   }
+
+  esPasswordValida(password: string): boolean {
+    const regex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{6,16}$/;
+    return regex.test(password);
+  }
+
+  toggleNuevaPassword(): void {
+    this.mostrarNuevaContrasena = !this.mostrarNuevaContrasena;
+  }
+
+  toggleConfirmPassword(): void {
+    this.mostrarConfirmContrasena = !this.mostrarConfirmContrasena;
+  }
+
+  onSuccessPopupClose(): void {
+      this.showSuccess = false;
+      this.router.navigate(['/login']);
+    }
 }

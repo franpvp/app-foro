@@ -10,7 +10,6 @@
           <input type="text" class="form-control" id="username" name="username"
                  [(ngModel)]="username" required />
         </div>
-
         <!-- Password -->
         <div class="mb-3">
           <label for="password" class="form-label">Contraseña</label>
@@ -37,6 +36,9 @@
       <!-- Enlace para recuperar contraseña -->
       <div class="recover-link mt-3 text-center">
         <button type="button" class="recover-button" (click)="goToRecuperar()">¿Olvidaste tu contraseña?</button>
+      </div>
+      <div *ngIf="loginError" class="alert alert-danger text-center mt-4">
+        Nombre de usuario o contraseña incorrectos.
       </div>
     </div>
   </div>

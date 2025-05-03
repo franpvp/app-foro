@@ -33,6 +33,7 @@ export class HomeComponent implements OnInit {
   nuevaPublicacion: PublicacionDTO = {
     idUsuario: Number(this.userId),
     titulo: '',
+    categoria: '',
     contenido: '',
     fechaCreacion: new Date()
   };
@@ -101,6 +102,7 @@ export class HomeComponent implements OnInit {
         this.nuevaPublicacion = {
           idUsuario: Number(this.userId),
           titulo: '',
+          categoria: '',
           contenido: '',
           fechaCreacion: new Date()
         };

@@ -73,6 +73,7 @@ describe('HomeComponent', () => {
     mockPublicacionService.crearPublicacion.and.returnValue(of({
       idUsuario: 1,
       titulo: 'Mock titulo',
+      categoria: 'Mock categoria'
       contenido: 'Mock contenido',
       fechaCreacion: new Date()
     }));
@@ -82,6 +83,7 @@ describe('HomeComponent', () => {
     component.nuevaPublicacion = {
       idUsuario: 1,
       titulo: 'Nueva',
+      categoria: 'Categoria'
       contenido: 'Contenido',
       fechaCreacion: new Date()
     };

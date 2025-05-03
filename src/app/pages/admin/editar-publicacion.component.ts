@@ -79,6 +79,7 @@ export class EditarPublicacionComponent implements OnInit {
     idPublicacion: 0,
     idUsuario: 0,
     titulo: '',
+    categoria: '',
     contenido: '',
     fechaCreacion: new Date()
   };

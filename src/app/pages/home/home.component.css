@@ -157,11 +157,33 @@ textarea::placeholder {
   color: #ffffff !important;
 }
 
-/* Align comment button to the right */
-
 .comment-input-section input {
   flex: 1;
   min-width: 0;
   margin-left: auto;
+}
+
+.post-card {
+  position: relative;
+}
+
+.category-btn {
+  background: linear-gradient(45deg, #833ab4, #ee2a7b); /* mismo degradado que .btn-warning */
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  cursor: default;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.category-btn:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
 }
 

@@ -24,6 +24,8 @@ export class LoginComponent {
   username = '';
   password = '';
   mostrarPassword = false;
+  loginError = false;
+
 
   constructor(
     private authService: AuthService,
@@ -35,6 +37,7 @@ export class LoginComponent {
   }
 
   onSubmit() {
+    this.loginError = false;
     this.authService.login(this.username, this.password).subscribe({
       next: (response: LoginResponseDTO) => {
         console.log(response.role);
@@ -54,9 +57,21 @@ export class LoginComponent {
         console.error('Login failed:', error);
       }
     });
+
+    this.authService.login(this.username, this.password).subscribe({
+        next: () => {
+          this.router.navigate(['/home']);
+        },
+        error: () => {
+          // Al fallar, mostramos el mensaje de error
+          this.loginError = true;
+        }
+      });
   }
 
   goToRecuperar(): void {
     this.router.navigate(['/recuperar-contrasena']);
   }
+
+
 }

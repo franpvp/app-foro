@@ -5,7 +5,7 @@
     <div *ngIf="authEstaLogeado()" class="post-card">
       <div class="card-body">
         <h5 class="card-title">Crear nueva publicación</h5>
-        <form (ngSubmit)="crearNuevaPublicacion()">
+        <form #pubForm="ngForm" (ngSubmit)="crearNuevaPublicacion()" novalidate>
           <div class="form-group">
             <input type="text" class="form-control" placeholder="Título"
                    [(ngModel)]="nuevaPublicacion.titulo" name="titulo" required>
@@ -14,7 +14,23 @@
                 <textarea class="form-control" placeholder="¿Qué estás pensando?"
                           [(ngModel)]="nuevaPublicacion.contenido" name="contenido" rows="3" required></textarea>
           </div>
-          <button type="submit" class="btn btn-warning w-100">Publicar</button>
+          <div class="form-group">
+            <label for="categoria">Categoría</label>
+            <select id="categoria" class="form-control"
+                    [(ngModel)]="nuevaPublicacion.categoria" name="categoria"
+                    #categoria="ngModel" required>
+              <option value="" disabled selected>Selecciona categoría</option>
+              <option value="Tecnología">Tecnología</option>
+              <option value="Salud">Salud</option>
+              <option value="Educación">Educación</option>
+              <option value="Ocio">Ocio</option>
+              <option value="Noticias">Noticias</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-warning w-100" [disabled]="pubForm.invalid">
+            Publicar
+          </button>
         </form>
       </div>
     </div>
@@ -32,6 +48,9 @@
               </div>
             </div>
             <h5 class="card-title">{{ publicacion.titulo }}</h5>
+            <div class="category-btn">
+              {{ publicacion.categoria }}
+            </div>
             <p class="card-text">{{ publicacion.contenido }}</p>
             <hr>
             <!-- Sección de comentarios -->
