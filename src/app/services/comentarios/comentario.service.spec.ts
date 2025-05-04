@@ -73,12 +73,15 @@ describe('ComentarioService', () => {
     req.flush(mockComentario);
   });
 
-  it('debería eliminar un comentario por ID y usuario', () => {
-    service.eliminarComentario(1, 2).subscribe(response => {
-      expect(response).toBeNull(); // ahora acepta null
+  it('debería eliminar un comentario por ID y usuario actual', () => {
+    // Simular que el usuario con ID 2 está autenticado
+    localStorage.setItem('userId', '2');
+
+    service.eliminarComentario(1, 999).subscribe(response => {
+      expect(response).toBeNull(); // porque req.flush(null)
     });
 
-    const req = httpMock.expectOne(`${baseUrl}/comentarios?id-comentario=1&id-usuario=2`);
+    const req = httpMock.expectOne('http://localhost:8080/api/v1/comentarios?id-comentario=1&id-usuario=2');
     expect(req.request.method).toBe('DELETE');
     req.flush(null);
   });

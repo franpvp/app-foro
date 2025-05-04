@@ -74,14 +74,16 @@ describe('PublicacionService', () => {
     req.flush(mockPublicacion);
   });
 
-  it('debería eliminar una publicación por ID y usuario', () => {
-    service.eliminarPublicacion(1, 1).subscribe(response => {
-      expect(response).toBeNull();  // ← validar null
+  it('debería eliminar una publicación por ID y usuario actual', () => {
+    // Simular que el usuario con ID 1 está autenticado
+    localStorage.setItem('userId', '1');
+
+    // Llamada con un ID de usuario ficticio, que será ignorado
+    service.eliminarPublicacion(1, 999).subscribe(response => {
+      expect(response).toBeNull();  // ← porque req.flush(null)
     });
 
-    const req = httpMock.expectOne(
-      `${baseUrl}/publicaciones?id-publicacion=1&id-usuario=1`
-    );
+    const req = httpMock.expectOne(`${baseUrl}/publicaciones?id-publicacion=1&id-usuario=1`);
     expect(req.request.method).toBe('DELETE');
     req.flush(null);
   });

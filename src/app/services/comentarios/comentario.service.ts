@@ -32,7 +32,8 @@ export class ComentarioService {
   }
 
   eliminarComentario(idComentario: number, idUsuario: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/comentarios?id-comentario=${idComentario}&id-usuario=${idUsuario}`);
+    const currentUserId = this.obtenerIdUsuario();
+    return this.http.delete<void>(`${this.baseUrl}/comentarios?id-comentario=${idComentario}&id-usuario=${currentUserId}`);
   }
 
   obtenerComentarioPorId(id: number): Observable<ComentarioDTO> {

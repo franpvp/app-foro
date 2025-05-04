@@ -33,6 +33,7 @@ export class PublicacionService {
   }
 
   eliminarPublicacion(idPublicacion: number, idUsuario: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/publicaciones?id-publicacion=${idPublicacion}&id-usuario=${idUsuario}`);
+    const currentUserId = this.obtenerIdUsuario();
+    return this.http.delete<void>(`${this.baseUrl}/publicaciones?id-publicacion=${idPublicacion}&id-usuario=${currentUserId}`);
   }
 }

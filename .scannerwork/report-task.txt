@@ -2,5 +2,5 @@ projectKey=app-foro
 serverUrl=http://localhost:9000
 serverVersion=25.4.0.105899
 dashboardUrl=http://localhost:9000/dashboard?id=app-foro
-ceTaskId=b2334a9e-04ee-4b03-b877-c2c20c9304b9
-ceTaskUrl=http://localhost:9000/api/ce/task?id=b2334a9e-04ee-4b03-b877-c2c20c9304b9
+ceTaskId=63965482-4273-4b76-b205-faa102e436af
+ceTaskUrl=http://localhost:9000/api/ce/task?id=63965482-4273-4b76-b205-faa102e436af
